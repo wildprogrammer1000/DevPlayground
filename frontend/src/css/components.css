@@ -1,0 +1,30 @@
+.app_container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  max-width: 1200px;
+  display: flex;
+  flex-direction: column;
+}
+.app_container .app_content {
+  flex: 1;
+  padding: 16px;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 60px;
+  padding: 16px;
+  border-bottom: 1px solid #ccc;
+  margin-bottom: 16px;
+}
+
+.footer {
+  height: 80px;
+  padding: 16px;
+}

@@ -1,0 +1,14 @@
+services:
+  maria:
+    container_name: db
+    image: mariadb
+    environment:
+      MARIADB_ROOT_PASSWORD: test
+    ports:
+      - 3306:3306
+    volumes:
+      - maria:/var/lib/mysql
+
+volumes:
+  maria:
+    external: true

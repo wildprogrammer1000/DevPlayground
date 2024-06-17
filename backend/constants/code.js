@@ -1,0 +1,9 @@
+const CODE = {
+  SUCCESS: 200,
+
+  // ACCOUNT
+  ACCOUNT_NOT_REGISTERED: 210,
+  ACCOUNT_NICKNAME_DUPLICATED: 211,
+};
+
+module.exports = { CODE };
