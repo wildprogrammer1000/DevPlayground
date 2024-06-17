@@ -9,11 +9,15 @@ const QUERY = {
   BOARD: "select * from board order by create_time desc limit ? offset ?",
   BOARD_COUNT: "select convert(Count(*), int) as count from board",
   BOARD_CREATE:
-    "insert into board (user_id, user_nickname, title, content) values(?, ?, ?, ?)",
+    "insert into board (user_id, user_nickname, title, content, category) values(?, ?, ?, ?, ?)",
   BOARD_DETAIL: "select * from board where id=?",
   BOARD_DELETE: "delete from board where id=?",
   BOARD_EDIT:
     "update board set title=?, content=?, update_time=current_timestamp() where id=?",
+
+  BOARD_CATEGORY:
+    "select * from board where category=? order by create_time desc limit ? offset ?",
+  BOARD_CATEGORY_COUNT: "select Count(*) as count from board where category=?",
 };
 
 module.exports = { QUERY };

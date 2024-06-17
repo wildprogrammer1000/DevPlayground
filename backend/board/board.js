@@ -4,26 +4,35 @@ const { pool } = require("../db/connection");
 const { jwtDecode } = require("jwt-decode");
 
 const getBoard = async (req, res) => {
+  let { page, rowsPerPage, category } = req.query;
   let conn;
+
+  category = Number(category);
+  rowsPerPage = Number(rowsPerPage);
+
   try {
     conn = await pool.getConnection();
 
-    const { page, rowsPerPage } = req.query;
+    let rows_1, rows_2;
 
-    const rows_1 = await conn.query(QUERY.BOARD_COUNT);
+    if (category === -1) {
+      rows_1 = await conn.query(QUERY.BOARD_COUNT);
+      rows_2 = await conn.query(QUERY.BOARD, [rowsPerPage, page * rowsPerPage]);
+    } else {
+      rows_1 = await conn.query(QUERY.BOARD_CATEGORY_COUNT, [category]);
+      rows_2 = await conn.query(QUERY.BOARD_CATEGORY, [
+        category,
+        rowsPerPage,
+        page * rowsPerPage,
+      ]);
+    }
     const { count } = rows_1[0];
     const totalPage = Math.ceil(Number(count) / rowsPerPage);
-
-    const rows_2 = await conn.query(QUERY.BOARD, [
-      Number(rowsPerPage),
-      page * rowsPerPage,
-    ]);
-
-    res.json({ totalPage, board: rows_2 });
-    conn.release();
+    return res.json({ totalPage, board: rows_2 });
   } catch (err) {
-    if (conn) conn.release();
     console.error("Error - Get Board: ", err);
+  } finally {
+    if (conn) conn.release();
   }
 };
 const getPost = async (req, res) => {
@@ -34,11 +43,10 @@ const getPost = async (req, res) => {
 
     let rows = await pool.query(QUERY.BOARD_DETAIL, [post_id]);
     res.json({ ...rows[0] });
-
-    conn.release();
   } catch (err) {
-    if (conn) conn.release();
     console.error("Error - Get Post: ", err);
+  } finally {
+    if (conn) conn.release();
   }
 };
 
@@ -46,7 +54,7 @@ const createPost = async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
-    const { platform, id_token, title, content } = req.body;
+    const { platform, id_token, title, content, category } = req.body;
     const userInfo = jwtDecode(id_token);
     const rows_1 = await conn.query(QUERY.USER_GET, [platform, userInfo.email]);
 
@@ -55,14 +63,14 @@ const createPost = async (req, res) => {
       rows_1[0].nickname,
       title,
       content,
+      category,
     ]);
 
     res.status(CODE.SUCCESS).send();
-
-    conn.release();
   } catch (err) {
-    if (conn) conn.release();
     console.error("Error - Create Post: ", err);
+  } finally {
+    if (conn) conn.release();
   }
 };
 const deletePost = async (req, res) => {
@@ -73,11 +81,10 @@ const deletePost = async (req, res) => {
 
     await conn.query(QUERY.BOARD_DELETE, [post_id]);
     res.send();
-
-    conn.release();
   } catch (err) {
-    if (conn) conn.release();
     console.error("Error - Delete Post: ", err);
+  } finally {
+    if (conn) conn.release();
   }
 };
 
@@ -89,11 +96,10 @@ const editPost = async (req, res) => {
 
     await conn.query(QUERY.BOARD_EDIT, [title, content, id]);
     res.send();
-
-    conn.release();
   } catch (err) {
-    if (conn) conn.release();
     console.error("Error - Edit Post: ", err);
+  } finally {
+    if (conn) conn.release();
   }
 };
 

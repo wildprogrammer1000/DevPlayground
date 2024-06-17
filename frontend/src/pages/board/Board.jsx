@@ -1,15 +1,18 @@
 import { useEffect, useState } from "react";
 import { requestGet } from "../../api/fetch";
 import { useNavigate } from "react-router-dom";
-import URL from "../../constants/url";
 import { getSessionItem } from "../../utils/storage";
+import { CATEGORY } from "../../constants/constants";
+import URL from "../../constants/url";
 
-const columns = ["제목", "내용", "작성자"];
+const columns = ["카테고리", "제목", "내용", "작성자"];
+
 const Board = () => {
   const navigate = useNavigate();
   const [board, setBoard] = useState([]);
   const [totalPage, setTotalPage] = useState(0);
   const [searchOptions, setSearchOptions] = useState({
+    category: -1,
     page: 0,
     rowsPerPage: 5,
   });
@@ -29,21 +32,35 @@ const Board = () => {
     }
     navigate(URL.BOARD_CREATE);
   };
-  const prevPage = () => {};
-  const nextPage = () => {};
-  // useEffect(() => {
-  //   getPosts();
-  // }, []);
 
   useEffect(() => {
     getPosts();
-  }, [searchOptions.page]);
+  }, [searchOptions.page, searchOptions.category]);
 
   return (
     <div>
       <div>게시판</div>
       {board.length > 0 ? (
         <>
+          <label>
+            <span>카테고리</span>
+            <select
+              onChange={(e) =>
+                setSearchOptions((state) => ({
+                  ...state,
+                  page: 0,
+                  category: Number(e.target.value),
+                }))
+              }
+            >
+              <option value={-1}>전체</option>
+              {Object.keys(CATEGORY).map((category) => (
+                <option value={category} key={CATEGORY[category]}>
+                  {CATEGORY[category]}
+                </option>
+              ))}
+            </select>
+          </label>
           <table>
             <thead>
               <tr>
@@ -60,6 +77,7 @@ const Board = () => {
                     navigate(URL.BOARD_DETAIL, { state: { post_id: post.id } })
                   }
                 >
+                  <td>{CATEGORY[post.category]}</td>
                   <td>{post.title}</td>
                   <td>{post.content}</td>
                   <td>{post.user_nickname}</td>

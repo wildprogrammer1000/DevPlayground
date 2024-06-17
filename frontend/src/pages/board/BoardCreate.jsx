@@ -3,12 +3,13 @@ import { requestPost } from "../../api/fetch";
 import { getSessionItem } from "../../utils/storage";
 import { useNavigate } from "react-router-dom";
 import URL from "../../constants/url";
-
+import { CATEGORY } from "../../constants/constants";
 const BoardCreate = () => {
   const navigate = useNavigate();
   const [inputs, setInputs] = useState({
     title: "",
     content: "",
+    category: 0,
   });
   const handleResponse = (res) => {
     switch (res.status) {
@@ -38,6 +39,20 @@ const BoardCreate = () => {
             setInputs((state) => ({ ...state, title: e.target.value }))
           }
         ></input>
+        <select
+          onChange={(e) =>
+            setInputs((state) => ({
+              ...state,
+              category: Number(e.target.value),
+            }))
+          }
+        >
+          {Object.keys(CATEGORY).map((category) => (
+            <option value={category} key={CATEGORY[category]}>
+              {CATEGORY[category]}
+            </option>
+          ))}
+        </select>
         <textarea
           value={inputs.content}
           onChange={(e) =>
