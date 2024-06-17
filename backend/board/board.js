@@ -17,14 +17,28 @@ const getBoard = async (req, res) => {
 
     if (category === -1) {
       rows_1 = await conn.query(QUERY.BOARD_COUNT);
-      rows_2 = await conn.query(QUERY.BOARD, [rowsPerPage, page * rowsPerPage]);
+      rows_2 = await conn
+        .query(QUERY.BOARD, [rowsPerPage, page * rowsPerPage])
+        .then((rows) =>
+          rows.map((row) => {
+            row.cmt_count = Number(row.cmt_count);
+            return row;
+          })
+        );
     } else {
       rows_1 = await conn.query(QUERY.BOARD_CATEGORY_COUNT, [category]);
-      rows_2 = await conn.query(QUERY.BOARD_CATEGORY, [
-        category,
-        rowsPerPage,
-        page * rowsPerPage,
-      ]);
+      rows_2 = await conn
+        .query(QUERY.BOARD_CATEGORY, [
+          category,
+          rowsPerPage,
+          page * rowsPerPage,
+        ])
+        .then((rows) =>
+          rows.map((row) => {
+            row.cmt_count = Number(row.cmt_count);
+            return row;
+          })
+        );
     }
     const { count } = rows_1[0];
     const totalPage = Math.ceil(Number(count) / rowsPerPage);

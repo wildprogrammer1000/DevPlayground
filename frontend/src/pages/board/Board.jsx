@@ -79,8 +79,11 @@ const Board = () => {
                 >
                   <td>{CATEGORY[post.category]}</td>
                   <td>{post.title}</td>
-                  <td>{post.content}</td>
-                  <td>{post.user_nickname}</td>
+                  <td>
+                    {post.content}
+                    {`[${post.cmt_count}]`}
+                  </td>
+                  <td>{post.nickname}</td>
                 </tr>
               ))}
             </tbody>
