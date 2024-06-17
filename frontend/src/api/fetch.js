@@ -24,7 +24,7 @@ const refreshSession = async () => {
       data: session,
     });
     setSessionItem("userTokens", response.data);
-    console.log("Session Refresh Response: ", response);
+    // console.log("Session Refresh Response: ", response);
   }
 };
 

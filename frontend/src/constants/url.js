@@ -12,6 +12,7 @@ const URL = {
   BOARD_CREATE: "/board/create",
   BOARD_DETAIL: "/board/detail",
   BOARD_DELETE: "/board/delete",
+  BOARD_EDIT: "/board/edit",
 };
 
 export default URL;

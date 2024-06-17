@@ -12,12 +12,7 @@ const getGoogleUser = async (req, res) => {
   let conn;
   try {
     const { codeResponse } = req.query;
-    console.log("codeResponse: ", codeResponse);
     const { tokens } = await oAuth2Client.getToken(codeResponse.code);
-
-    console.log("=== Token === ");
-    console.log(tokens);
-    console.log("====== ");
 
     const { data } = await axios({
       method: "get",

@@ -9,7 +9,13 @@ const {
   registerUser,
   verifyNickname,
 } = require("./auth/auth");
-const { getBoard, getPost, createPost, deletePost } = require("./board/board");
+const {
+  getBoard,
+  getPost,
+  createPost,
+  deletePost,
+  editPost,
+} = require("./board/board");
 
 // Temp
 const { pool } = require("./db/connection");
@@ -32,6 +38,7 @@ app.get(URL.BOARD, getBoard);
 app.get(URL.BOARD_DETAIL, getPost);
 app.post(URL.BOARD_CREATE, createPost);
 app.post(URL.BOARD_DELETE, deletePost);
+app.post(URL.BOARD_EDIT, editPost);
 
 // Temp
 app.get("/db", async (req, res) => {
@@ -43,10 +50,10 @@ app.get("/db", async (req, res) => {
   res.send("OK");
 });
 
-app.get("/test", (req, res) => {
-  console.log("Request Info: ", req);
-  res.send("ok");
-});
+// app.get("/test", (req, res) => {
+//   console.log("Request Info: ", req);
+//   res.send("ok");
+// });
 
 app.listen(CONFIG.PORT, () => {
   console.log("server started");

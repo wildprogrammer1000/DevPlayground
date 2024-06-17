@@ -8,10 +8,18 @@ const getBoard = async (req, res) => {
   try {
     conn = await pool.getConnection();
 
-    const { page } = req.query;
-    const rows_1 = await conn.query(QUERY.BOARD);
+    const { page, rowsPerPage } = req.query;
 
-    res.json({ board: rows_1 });
+    const rows_1 = await conn.query(QUERY.BOARD_COUNT);
+    const { count } = rows_1[0];
+    const totalPage = Math.ceil(Number(count) / rowsPerPage);
+
+    const rows_2 = await conn.query(QUERY.BOARD, [
+      Number(rowsPerPage),
+      page * rowsPerPage,
+    ]);
+
+    res.json({ totalPage, board: rows_2 });
     conn.release();
   } catch (err) {
     if (conn) conn.release();
@@ -73,9 +81,26 @@ const deletePost = async (req, res) => {
   }
 };
 
+const editPost = async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const { id, title, content } = req.body;
+
+    await conn.query(QUERY.BOARD_EDIT, [title, content, id]);
+    res.send();
+
+    conn.release();
+  } catch (err) {
+    if (conn) conn.release();
+    console.error("Error - Edit Post: ", err);
+  }
+};
+
 module.exports = {
   getBoard,
   getPost,
   createPost,
   deletePost,
+  editPost,
 };

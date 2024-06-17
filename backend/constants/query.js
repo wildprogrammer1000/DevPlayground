@@ -6,11 +6,14 @@ const QUERY = {
   USER_CHECK_NICKNAME: "select * from users where nickname=?",
 
   // BOARD
-  BOARD: "select * from board order by create_time desc",
+  BOARD: "select * from board order by create_time desc limit ? offset ?",
+  BOARD_COUNT: "select convert(Count(*), int) as count from board",
   BOARD_CREATE:
     "insert into board (user_id, user_nickname, title, content) values(?, ?, ?, ?)",
   BOARD_DETAIL: "select * from board where id=?",
   BOARD_DELETE: "delete from board where id=?",
+  BOARD_EDIT:
+    "update board set title=?, content=?, update_time=current_timestamp() where id=?",
 };
 
 module.exports = { QUERY };

@@ -14,7 +14,6 @@ const Login = ({ setUser }) => {
         break;
       default:
         const { userInfo, tokens } = res.data;
-        console.log("로그인 성공: ", res.data);
         setUser(userInfo);
         tokens.platform = "google";
         setSessionItem("userTokens", tokens);

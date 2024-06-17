@@ -9,7 +9,6 @@ const BoardDetail = ({ user }) => {
   const [post, setPost] = useState();
 
   const getPost = () => {
-    console.log("location state: ", location.state);
     if (!location.state) {
       alert("비정상적인 접근입니다.");
       navigate(URL.BOARD);
@@ -17,11 +16,13 @@ const BoardDetail = ({ user }) => {
     }
     const post_id = location.state.post_id;
     requestGet(URL.BOARD_DETAIL, { post_id }, (res) => {
-      console.log("get post response: ", res);
       if (res.status === CODE.SUCCESS) {
         setPost(res.data);
       }
     });
+  };
+  const editPost = () => {
+    navigate(URL.BOARD_EDIT, { state: { post } });
   };
   const deletePost = () => {
     if (window.confirm("게시글을 삭제할까요?")) {
@@ -56,7 +57,7 @@ const BoardDetail = ({ user }) => {
       <button onClick={() => navigate(URL.BOARD)}>목록</button>
       {user && post && user.id === post.user_id && (
         <div>
-          <button>수정</button>
+          <button onClick={editPost}>수정</button>
           <button onClick={deletePost}>삭제</button>
         </div>
       )}

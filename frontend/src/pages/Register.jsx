@@ -16,9 +16,6 @@ const Register = ({ setUser }) => {
   const [nicknameVerified, setNicknameVerified] = useState(false);
 
   const handleResponse = (res) => {
-    console.group("=== Register Response === ");
-    console.log(res);
-    console.groupEnd("=== End === ");
     switch (res.status) {
       case CODE.ACCOUNT_NICKNAME_DUPLICATED:
         alert("이미 사용중인 닉네임입니다.");
