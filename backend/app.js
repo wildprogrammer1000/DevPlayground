@@ -1,6 +1,5 @@
 require("dotenv").config();
 const express = require("express");
-const { CONFIG } = require("./config/config");
 const { URL } = require("./constants/url");
 const cors = require("cors");
 const {
@@ -55,6 +54,6 @@ app.get("/db", async (req, res) => {
 //   res.send("ok");
 // });
 
-app.listen(CONFIG.PORT, () => {
+app.listen(process.env.EXPRESS_PORT, () => {
   console.log("server started");
 });
