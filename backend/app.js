@@ -24,6 +24,7 @@ const {
 
 // Temp
 const { pool } = require("./db/connection");
+const { getWaitingUsers, approveUser, rejectUser } = require("./admin");
 
 const app = express();
 app.use(cors({ origin: "http://localhost:3000" }));
@@ -50,6 +51,11 @@ app.post(URL.BOARD_COMMENT, addComment);
 app.delete(URL.BOARD_COMMENT, deleteComment);
 app.get(URL.BOARD_LIKE, getLikes);
 app.post(URL.BOARD_LIKE, toggleLike);
+
+// Admin
+app.get(URL.ADMIN_GET_WATIING_USERS, getWaitingUsers);
+app.post(URL.ADMIN_APPROVE_USER, approveUser);
+app.post(URL.ADMIN_REJECT_USER, rejectUser);
 
 // Temp
 app.get("/db", async (req, res) => {

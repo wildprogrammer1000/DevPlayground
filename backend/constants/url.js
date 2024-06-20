@@ -8,6 +8,13 @@ const URL = {
   REGISTER_WAIT: "/register/wait",
   VERIFY_NICKNAME: "/register/verify",
 
+  // 관리자
+  ADMIN: "/admin",
+  ADMIN_MANAGE_WAITING: "/admin/manage_waiting",
+  ADMIN_GET_WATIING_USERS: "/admin/waiting_users",
+  ADMIN_APPROVE_USER: "/admin/approve_user",
+  ADMIN_REJECT_USER: "/admin/reject_user",
+
   // 게시판
   BOARD: "/board",
   BOARD_CREATE: "/board/create",

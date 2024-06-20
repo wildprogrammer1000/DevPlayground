@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Main from "./pages/Main";
@@ -14,12 +14,20 @@ import BoardCreate from "./pages/board/BoardCreate";
 import BoardDetail from "./pages/board/BoardDetail";
 import BoardEdit from "./pages/board/BoardEdit";
 import RegisterWait from "./pages/RegisterWait";
+import Admin from "./pages/admin/Admin";
+import AdminManageWaiting from "./pages/admin/AdminManageWaiting";
 
 function App() {
+  const location = useLocation();
   // 임시 유저 State
   const [user, setUser] = useState();
 
-  return (
+  return location.pathname.includes(URL.ADMIN) ? (
+    <Routes>
+      <Route path={URL.ADMIN} element={<Admin />} />
+      <Route path={URL.ADMIN_MANAGE_WAITING} element={<AdminManageWaiting />} />
+    </Routes>
+  ) : (
     <div className="app_container">
       <Header user={user} setUser={setUser} />
       <div className="app_content">

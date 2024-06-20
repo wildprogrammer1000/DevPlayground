@@ -1,4 +1,11 @@
 const QUERY = {
+  // ADMIN
+  ADMIN_GET_WAITING_USERS: "select * from waiting_users",
+  ADMIN_DELETE_WAITING_USER:
+    "delete from waiting_users where role=? and platform=? and email=? and nickname=?",
+  ADMIN_APPROVE_USER:
+    "insert into users (role, platform, email, nickname) values(?, ?, ?, ?)",
+
   // USERS
   USER_GET: "select * from users where platform=? and email=?",
   USER_GET_WAITING: "select * from waiting_users where platform=? and email=?",
