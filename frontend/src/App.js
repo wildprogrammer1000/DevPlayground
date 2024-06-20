@@ -13,6 +13,7 @@ import "./css/components.css";
 import BoardCreate from "./pages/board/BoardCreate";
 import BoardDetail from "./pages/board/BoardDetail";
 import BoardEdit from "./pages/board/BoardEdit";
+import RegisterWait from "./pages/RegisterWait";
 
 function App() {
   // 임시 유저 State
@@ -34,6 +35,7 @@ function App() {
             element={<BoardDetail user={user} />}
           />
           <Route path={URL.BOARD_EDIT} element={<BoardEdit />} />
+          <Route path={URL.REGISTER_WAIT} element={<RegisterWait />} />
         </Routes>
       </div>
 

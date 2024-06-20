@@ -12,6 +12,9 @@ const Login = ({ setUser }) => {
       case CODE.ACCOUNT_NOT_REGISTERED:
         navigate(URL.REGISTER, { state: res.data });
         break;
+      case CODE.ACCOUNT_WAITING:
+        navigate(URL.REGISTER_WAIT, { state: { userInfo: res.data.userInfo } });
+        break;
       default:
         const { userInfo, tokens } = res.data;
         setUser(userInfo);

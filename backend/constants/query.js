@@ -1,9 +1,17 @@
 const QUERY = {
   // USERS
   USER_GET: "select * from users where platform=? and email=?",
+  USER_GET_WAITING: "select * from waiting_users where platform=? and email=?",
   USER_REGISTER:
-    "insert into users (platform, email, nickname) values (?, ?, ?) returning *",
+    "insert into users (role, platform, email, nickname) values (?, ?, ?, ?) returning *",
   USER_CHECK_NICKNAME: "select * from users where nickname=?",
+
+  // WAITING USERS
+  USER_WAIT:
+    "insert into waiting_users (role, platform, email, nickname) values (?, ?, ?, ?) returning *",
+  USER_WAIT_DELETE: "delete from waiting_users where nickname=?",
+
+  // BOARD
   BOARD: `
     select u.nickname, Count(c.id) as cmt_count, b.id, b.user_id, b.title, b.content, b.category, b.create_time
     from board b
@@ -24,6 +32,20 @@ const QUERY = {
   BOARD_CATEGORY:
     "select * from board where category=? order by create_time desc limit ? offset ?",
   BOARD_CATEGORY_COUNT: "select Count(*) as count from board where category=?",
+  BOARD_GET_COMMENT: `
+  select c.id, c.content, c.create_time, c.user_id, u.nickname 
+  from comment c
+  left join (users as u) on (c.user_id = u.id)
+  where c.post_id=?
+  order by c.create_time desc
+  `,
+  BOARD_ADD_COMMENT:
+    "insert into comment (post_id, user_id, content) values (?, ?, ?)",
+  BOARD_DELETE_COMMENT: "delete from comment where id=?",
+  BOARD_GET_LIKES: "select * from likes where post_id=?",
+  BOARD_CHECK_LIKE: "select * from likes where post_id=? and user_id=?",
+  BOARD_ADD_LIKE: "insert into likes (post_id, user_id) values (?, ?)",
+  BOARD_REMOVE_LIKE: "delete from likes where post_id=? and user_id=?",
 };
 
 module.exports = { QUERY };

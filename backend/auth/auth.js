@@ -9,7 +9,7 @@ const oAuth2Client = new OAuth2Client(
   "postmessage"
 );
 const getGoogleUser = async (req, res) => {
-  let conn;
+  let conn, rows;
   try {
     const { codeResponse } = req.query;
     const { tokens } = await oAuth2Client.getToken(codeResponse.code);
@@ -22,20 +22,29 @@ const getGoogleUser = async (req, res) => {
 
     conn = await pool.getConnection();
 
-    const rows = await conn.query(QUERY.USER_GET, ["google", data.email]);
+    rows = await conn.query(QUERY.USER_GET, ["google", data.email]);
 
-    conn.release();
     if (rows.length > 0) {
       res.json({ userInfo: rows[0], tokens });
     } else {
-      res
-        .status(CODE.ACCOUNT_NOT_REGISTERED)
-        .json({ userInfo: { platform: "google", email: data.email }, tokens });
+      rows = await conn.query(QUERY.USER_GET_WAITING, ["google", data.email]);
+      if (rows.length) {
+        res.status(CODE.ACCOUNT_WAITING).json({
+          userInfo: rows[0],
+          tokens,
+        });
+      } else {
+        res.status(CODE.ACCOUNT_NOT_REGISTERED).json({
+          userInfo: { platform: "google", email: data.email },
+          tokens,
+        });
+      }
     }
   } catch (err) {
     console.error("Error - Get Google User: ", err);
-    if (conn) conn.release();
     res.status(500).send(err);
+  } finally {
+    if (conn) conn.release();
   }
 };
 
@@ -58,34 +67,46 @@ const refreshGoogleSession = async (req, res) => {
 };
 
 const registerUser = async (req, res) => {
-  let conn;
+  let conn, rows;
 
   try {
-    const { platform, email, nickname, tokens } = req.body;
+    const { role, platform, email, nickname, tokens } = req.body;
     conn = await pool.getConnection();
 
     // 닉네임 중복 체크
-    const rows_1 = await pool.query(QUERY.USER_CHECK_NICKNAME, [nickname]);
+    rows = await pool.query(QUERY.USER_CHECK_NICKNAME, [nickname]);
 
-    if (rows_1.length > 0) {
+    if (rows.length > 0) {
       // 닉네임 중복
       res.status(CODE.ACCOUNT_NICKNAME_DUPLICATED);
     } else {
-      // 등록
-      const rows = await pool.query(QUERY.USER_REGISTER, [
-        platform,
-        email,
-        nickname,
-      ]);
+      let query;
+      if (role == "user") query = QUERY.USER_REGISTER;
+      else query = QUERY.USER_WAIT;
+
+      rows = await pool.query(query, [role, platform, email, nickname]);
       tokens.platform = platform;
       res.json({ userInfo: rows[0], tokens });
     }
-
-    conn.release();
   } catch (err) {
     console.error("Error - Register User: ", err);
-    if (conn) conn.release();
     res.status(500).send(err);
+  } finally {
+    if (conn) conn.release();
+  }
+};
+const deleteWaitingUser = async (req, res) => {
+  let conn;
+  try {
+    const { nickname } = req.body;
+    conn = await pool.getConnection();
+    await conn.query(QUERY.USER_WAIT_DELETE, [nickname]);
+    res.send();
+  } catch (err) {
+    console.error("Error - Delete Waiting User: ", err);
+    res.status(500).send(err);
+  } finally {
+    if (conn) conn.release();
   }
 };
 const verifyNickname = async (req, res) => {
@@ -96,12 +117,11 @@ const verifyNickname = async (req, res) => {
 
     const rows = await pool.query(QUERY.USER_CHECK_NICKNAME, [nickname]);
     res.send(rows.length === 0);
-
-    conn.release();
   } catch (err) {
     console.error("Error - Verify Nickname: ", err);
-    if (conn) conn.release();
     res.status(500).send(err);
+  } finally {
+    if (conn) conn.release();
   }
 };
 
@@ -109,5 +129,6 @@ module.exports = {
   getGoogleUser,
   refreshGoogleSession,
   registerUser,
+  deleteWaitingUser,
   verifyNickname,
 };

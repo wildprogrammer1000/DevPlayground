@@ -56,6 +56,7 @@ const getPost = async (req, res) => {
     conn = await pool.getConnection();
 
     let rows = await pool.query(QUERY.BOARD_DETAIL, [post_id]);
+    rows[0].likes = Number(rows[0].likes);
     res.json({ ...rows[0] });
   } catch (err) {
     console.error("Error - Get Post: ", err);
@@ -116,11 +117,87 @@ const editPost = async (req, res) => {
     if (conn) conn.release();
   }
 };
+const getComment = async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const { post_id } = req.query;
+    const rows = await conn.query(QUERY.BOARD_GET_COMMENT, [post_id]);
+    res.json({ comments: rows });
+  } catch (err) {
+    console.error("Error - Get Comment: ", err);
+  } finally {
+    if (conn) conn.release();
+  }
+};
+const addComment = async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const { post_id, user_id, content } = req.body;
+    await conn.query(QUERY.BOARD_ADD_COMMENT, [post_id, user_id, content]);
+    res.send();
+  } catch (err) {
+    console.error("Error - Add Comment: ", err);
+  } finally {
+    if (conn) conn.release();
+  }
+};
 
+const deleteComment = async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const { comment_id } = req.body;
+    await conn.query(QUERY.BOARD_DELETE_COMMENT, [comment_id]);
+    res.send();
+  } catch (err) {
+    console.error("Error - Delete Comment: ", err);
+  } finally {
+    if (conn) conn.release();
+  }
+};
+const getLikes = async (req, res) => {
+  let conn;
+  try {
+    conn = await pool.getConnection();
+    const { post_id } = req.query;
+
+    const rows = await conn.query(QUERY.BOARD_GET_LIKES, [post_id]);
+    res.json({ likes: rows });
+  } catch (err) {
+    console.error("Error - Get Likes: ", err);
+  } finally {
+    if (conn) conn.release();
+  }
+};
+const toggleLike = async (req, res) => {
+  let conn, rows;
+  try {
+    conn = await pool.getConnection();
+    const { post_id, user_id } = req.body;
+
+    rows = await conn.query(QUERY.BOARD_CHECK_LIKE, [post_id, user_id]);
+    if (rows.length > 0)
+      await conn.query(QUERY.BOARD_REMOVE_LIKE, [post_id, user_id]);
+    else await conn.query(QUERY.BOARD_ADD_LIKE, [post_id, user_id]);
+
+    res.send();
+  } catch (err) {
+    console.error("Error - Toggle Like: ", err);
+  } finally {
+    if (conn) conn.release();
+  }
+};
 module.exports = {
   getBoard,
   getPost,
   createPost,
   deletePost,
   editPost,
+  getComment,
+  addComment,
+  deleteComment,
+  getLikes,
+  toggleLike,
 };

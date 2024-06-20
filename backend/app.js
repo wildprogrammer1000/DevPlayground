@@ -6,6 +6,7 @@ const {
   getGoogleUser,
   refreshGoogleSession,
   registerUser,
+  deleteWaitingUser,
   verifyNickname,
 } = require("./auth/auth");
 const {
@@ -14,6 +15,11 @@ const {
   createPost,
   deletePost,
   editPost,
+  getComment,
+  addComment,
+  deleteComment,
+  getLikes,
+  toggleLike,
 } = require("./board/board");
 
 // Temp
@@ -31,6 +37,7 @@ app.post(URL.REFRESH_TOKEN_GOOGLE, refreshGoogleSession);
 // Register
 app.get(URL.VERIFY_NICKNAME, verifyNickname);
 app.post(URL.REGISTER, registerUser);
+app.delete(URL.REGISTER_WAIT, deleteWaitingUser);
 
 // Board
 app.get(URL.BOARD, getBoard);
@@ -38,6 +45,11 @@ app.get(URL.BOARD_DETAIL, getPost);
 app.post(URL.BOARD_CREATE, createPost);
 app.post(URL.BOARD_DELETE, deletePost);
 app.post(URL.BOARD_EDIT, editPost);
+app.get(URL.BOARD_COMMENT, getComment);
+app.post(URL.BOARD_COMMENT, addComment);
+app.delete(URL.BOARD_COMMENT, deleteComment);
+app.get(URL.BOARD_LIKE, getLikes);
+app.post(URL.BOARD_LIKE, toggleLike);
 
 // Temp
 app.get("/db", async (req, res) => {

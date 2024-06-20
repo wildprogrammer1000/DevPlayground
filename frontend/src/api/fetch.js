@@ -57,3 +57,17 @@ export const requestPost = async (url, data = {}, handler, errorHandler) => {
     if (errorHandler) errorHandler(err);
   }
 };
+export const requestDelete = async (url, data = {}, handler, errorHandler) => {
+  try {
+    await refreshSession();
+    const response = await axios({
+      url: SERVER_URL + url,
+      method: "delete",
+      data,
+    });
+    // console.log("DELETE response: ", response);
+    if (handler) handler(response);
+  } catch (err) {
+    if (errorHandler) errorHandler(err);
+  }
+};

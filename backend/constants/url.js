@@ -5,6 +5,7 @@ const URL = {
   REFRESH_TOKEN_GOOGLE: "/refresh_token/google",
 
   REGISTER: "/register",
+  REGISTER_WAIT: "/register/wait",
   VERIFY_NICKNAME: "/register/verify",
 
   // 게시판
@@ -13,6 +14,8 @@ const URL = {
   BOARD_DETAIL: "/board/detail",
   BOARD_DELETE: "/board/delete",
   BOARD_EDIT: "/board/edit",
+  BOARD_COMMENT: "/board/comment",
+  BOARD_LIKE: "/board/like",
 };
 
 module.exports = { URL };

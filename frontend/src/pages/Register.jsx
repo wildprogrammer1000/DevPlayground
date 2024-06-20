@@ -9,23 +9,29 @@ const Register = ({ setUser }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const [inputs, setInputs] = useState({
+    role: "user",
     nickname: "",
     agreement: false,
     policy: false,
   });
   const [nicknameVerified, setNicknameVerified] = useState(false);
 
+  const onChangeRole = (e) => {
+    setInputs((state) => ({ ...state, role: e.target.value }));
+  };
   const handleResponse = (res) => {
     switch (res.status) {
       case CODE.ACCOUNT_NICKNAME_DUPLICATED:
         alert("이미 사용중인 닉네임입니다.");
         break;
       default:
-        alert("가입이 완료되었습니다.");
         const { userInfo, tokens } = res.data;
-        setUser(userInfo);
-        setSessionItem("userTokens", tokens);
-        navigate(URL.MAIN);
+        if (userInfo.role === "user") {
+          setUser(userInfo);
+          setSessionItem("userTokens", tokens);
+          navigate(URL.MAIN);
+          alert("가입이 완료되었습니다.");
+        } else navigate(URL.REGISTER_WAIT, { state: userInfo });
     }
   };
   const registerAccount = (e) => {
@@ -61,6 +67,27 @@ const Register = ({ setUser }) => {
   }, []);
   return (
     <form className="center" onSubmit={registerAccount}>
+      <div>
+        <label>
+          <input
+            onChange={onChangeRole}
+            type="radio"
+            name="role"
+            value="user"
+            defaultChecked
+          ></input>
+          <span>사용자</span>
+        </label>
+        <label>
+          <input
+            onChange={onChangeRole}
+            type="radio"
+            name="role"
+            value="manager"
+          ></input>
+          <span>관리자</span>
+        </label>
+      </div>
       <input
         placeholder="닉네임을 입력해주세요."
         value={inputs.nickname}
