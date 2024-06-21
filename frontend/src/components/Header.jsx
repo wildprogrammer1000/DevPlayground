@@ -11,7 +11,12 @@ const Header = ({ user, setUser }) => {
   return (
     <header className="header">
       <div>
-        <Link to={URL.MAIN}>페이지 제목</Link>
+        <Link
+          to={URL.MAIN}
+          style={{ fontSize: 24, fontFamily: "Aggro B", letterSpacing: -0.5 }}
+        >
+          PLAYGROUNDDEV
+        </Link>
         <Link to={URL.BOARD}>게시판</Link>
       </div>
       {user ? (
