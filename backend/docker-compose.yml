@@ -2,13 +2,38 @@ services:
   maria:
     container_name: db
     image: mariadb
-    environment:
-      MARIADB_ROOT_PASSWORD: test
+    env_file: ".env"
     ports:
       - 3306:3306
     volumes:
       - maria:/var/lib/mysql
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mariadb-admin",
+          "ping",
+          "-h",
+          "localhost",
+          "-u",
+          "root",
+          "-p$$MARIADB_PASSWORD",
+        ]
+      timeout: 1s
+      retries: 10
 
+  nodejs:
+    container_name: backend
+    build: "./"
+    env_file: ".env"
+    ports:
+      - 4000:4000
+    volumes:
+      - maria:/app
+    restart: always
+    depends_on:
+      maria:
+        condition: service_healthy
 volumes:
   maria:
     external: true

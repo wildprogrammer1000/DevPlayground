@@ -9,11 +9,10 @@ const pool = mariadb.createPool({
   password: process.env.MARIADB_PASSWORD,
   connectionLimit: 10,
 });
-
 const initFilePath = path.join(__dirname, "../init/create_table.sql");
 fs.readFile(initFilePath, { encoding: "utf-8" }, async (err, data) => {
   if (err) {
-    console.error("Error - DB Init: ", err);
+    console.error("Error - Read File: ", err);
     return;
   }
   let conn;
