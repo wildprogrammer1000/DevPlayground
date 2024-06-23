@@ -1,7 +1,7 @@
 const { CODE } = require("../constants/code");
 const { QUERY } = require("../constants/query");
 const { pool } = require("../db/connection");
-const { jwtDecode } = require("jwt-decode");
+const { addSysLog } = require("../utils");
 
 const getBoard = async (req, res) => {
   let { page, rowsPerPage, category } = req.query;
@@ -69,17 +69,18 @@ const createPost = async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
-    const { platform, id_token, title, content, category } = req.body;
-    const userInfo = jwtDecode(id_token);
-    const rows_1 = await conn.query(QUERY.USER_GET, [platform, userInfo.email]);
+    const { title, content, category } = req.body;
+    const userInfo = req.userInfo;
 
     await conn.query(QUERY.BOARD_CREATE, [
-      rows_1[0].id,
-      rows_1[0].nickname,
+      userInfo.id,
       title,
       content,
       category,
     ]);
+
+    // 시스템 로그 추가
+    await addSysLog("post_create", { title, content, category }, req.userInfo);
 
     res.status(CODE.SUCCESS).send();
   } catch (err) {
@@ -95,7 +96,8 @@ const deletePost = async (req, res) => {
     const { post_id } = req.body;
 
     await conn.query(QUERY.BOARD_DELETE, [post_id]);
-    res.send();
+
+    res.sendStatus(CODE.SUCCESS);
   } catch (err) {
     console.error("Error - Delete Post: ", err);
   } finally {
@@ -110,7 +112,8 @@ const editPost = async (req, res) => {
     const { id, title, content } = req.body;
 
     await conn.query(QUERY.BOARD_EDIT, [title, content, id]);
-    res.send();
+
+    res.sendStatus(CODE.SUCCESS);
   } catch (err) {
     console.error("Error - Edit Post: ", err);
   } finally {
@@ -136,7 +139,14 @@ const addComment = async (req, res) => {
     conn = await pool.getConnection();
     const { post_id, user_id, content } = req.body;
     await conn.query(QUERY.BOARD_ADD_COMMENT, [post_id, user_id, content]);
-    res.send();
+
+    // 시스템 로그 추가
+    await addSysLog(
+      "comment_create",
+      { post_id, user_id, content },
+      req.userInfo
+    );
+    res.sendStatus(CODE.SUCCESS);
   } catch (err) {
     console.error("Error - Add Comment: ", err);
   } finally {
@@ -150,7 +160,8 @@ const deleteComment = async (req, res) => {
     conn = await pool.getConnection();
     const { comment_id } = req.body;
     await conn.query(QUERY.BOARD_DELETE_COMMENT, [comment_id]);
-    res.send();
+
+    res.sendStatus(CODE.SUCCESS);
   } catch (err) {
     console.error("Error - Delete Comment: ", err);
   } finally {
@@ -182,7 +193,7 @@ const toggleLike = async (req, res) => {
       await conn.query(QUERY.BOARD_REMOVE_LIKE, [post_id, user_id]);
     else await conn.query(QUERY.BOARD_ADD_LIKE, [post_id, user_id]);
 
-    res.send();
+    res.sendStatus(CODE.SUCCESS);
   } catch (err) {
     console.error("Error - Toggle Like: ", err);
   } finally {

@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { requestDelete } from "../api/fetch";
-import URL from "../constants/url";
-import CODE from "../constants/code";
+import { requestDelete } from "../../api/fetch";
+import URL from "../../constants/url";
+import CODE from "../../constants/code";
 
 const RegisterWait = () => {
   const location = useLocation();

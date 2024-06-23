@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import URL from "../../constants/url";
 import { requestDelete, requestGet, requestPost } from "../../api/fetch";
+import URL from "../../constants/url";
 import CODE from "../../constants/code";
+
 const BoardDetail = ({ user }) => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -28,9 +29,7 @@ const BoardDetail = ({ user }) => {
     });
   };
 
-  const editPost = () => {
-    navigate(URL.BOARD_EDIT, { state: { post } });
-  };
+  const editPost = () => navigate(URL.BOARD_EDIT, { state: { post } });
 
   const deletePost = () => {
     if (window.confirm("게시글을 삭제할까요?")) {
@@ -46,8 +45,6 @@ const BoardDetail = ({ user }) => {
   const onSuccess = (res) => {
     if (res.status === CODE.SUCCESS) {
       alert("댓글이 추가되었습니다.");
-      // 댓글 Refresh
-      // Reset Input
       getComment();
       setComment("");
     }
@@ -118,92 +115,115 @@ const BoardDetail = ({ user }) => {
   }, []);
   return (
     <div>
-      <div>게시글</div>
+      <h2>게시글</h2>
       <hr />
-      {post ? (
-        <>
-          <div>
-            <div>{post.title}</div>
-            <div>
-              <div>{post.create_time}</div>
-              <div>{post.user_nickname}</div>
+      <div style={{ maxWidth: 600, margin: "0 auto", padding: 8 }}>
+        {post ? (
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 8,
+              marginBottom: 16,
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                padding: 8,
+              }}
+            >
+              <div>{post.title}</div>
+              <div style={{ display: "flex", gap: 8 }}>
+                <div>{post.create_time}</div>
+                <div>{post.nickname}</div>
+              </div>
+            </div>
+            <div style={{ border: "2px solid #ccc", padding: 8 }}>
+              {post.content}
             </div>
           </div>
-          <div>{post.content}</div>
-        </>
-      ) : (
-        <div>게시글 가져오는 중...</div>
-      )}
-      <hr />
-      <div
-        style={{ display: "flex", gap: 8, alignItems: "center", fontSize: 20 }}
-      >
-        <button
-          style={{
-            width: 40,
-            height: 40,
-            borderRadius: "50%",
-            fontSize: 24,
-            border: "2px solid #999",
-          }}
-          onClick={toggleLike}
-        >
-          {user && likes.find((like) => like.user_id === user.id) ? "♥" : "♡"}
-        </button>
-
-        <div>{likes.length}</div>
-      </div>
-      {/* ♡ ♥ */}
-      <hr />
-      <div>댓글 수 0</div>
-      <form onSubmit={addComment}>
-        <input
-          type="text"
-          value={comment}
-          placeholder="댓글을 입력해주세요"
-          onChange={(e) => setComment(e.target.value)}
-        ></input>
-        <button>등록</button>
-      </form>
-      <div>
-        {comments.length > 0 ? (
-          <ul>
-            {comments.map((comment, index) => (
-              <li
-                key={`comment_${index}`}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  border: "2px solid #ccc",
-                  padding: 8,
-                }}
-              >
-                <div>
-                  <div>
-                    {comment.nickname} / {comment.create_time}
-                  </div>
-                  <div>{comment.content}</div>
-                </div>
-                {user && user.id === comment.user_id && (
-                  <button onClick={() => deleteComment(comment.id)}>
-                    삭제
-                  </button>
-                )}
-              </li>
-            ))}
-          </ul>
         ) : (
-          <div>댓글이 없습니다.</div>
+          <div>게시글 가져오는 중...</div>
+        )}
+        <div
+          style={{
+            display: "flex",
+            gap: 8,
+            justifyContent: "center",
+            alignItems: "center",
+            fontSize: 20,
+            marginBottom: 16,
+          }}
+        >
+          <button
+            style={{
+              width: 40,
+              height: 40,
+              borderRadius: "50%",
+              fontSize: 24,
+              border: "2px solid #999",
+            }}
+            onClick={toggleLike}
+          >
+            {user && likes.find((like) => like.user_id === user.id) ? "♥" : "♡"}
+          </button>
+
+          <div>{likes.length}</div>
+        </div>
+        <hr />
+        <div style={{ marginBottom: 8 }}>댓글 수 0</div>
+        <form onSubmit={addComment} style={{ marginBottom: 8 }}>
+          <input
+            type="text"
+            value={comment}
+            placeholder="댓글을 입력해주세요"
+            onChange={(e) => setComment(e.target.value)}
+          ></input>
+          <button>등록</button>
+        </form>
+        <div>
+          {comments.length > 0 ? (
+            <ul>
+              {comments.map((comment, index) => (
+                <li
+                  key={`comment_${index}`}
+                  style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    border: "2px solid #ccc",
+                    padding: 8,
+                  }}
+                >
+                  <div>
+                    <div>
+                      {comment.nickname} / {comment.create_time}
+                    </div>
+                    <div>{comment.content}</div>
+                  </div>
+                  {user && user.id === comment.user_id && (
+                    <button onClick={() => deleteComment(comment.id)}>
+                      삭제
+                    </button>
+                  )}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <div>댓글이 없습니다.</div>
+          )}
+        </div>
+        <hr />
+        <button onClick={() => navigate(URL.BOARD)}>목록</button>
+        {user && post && user.id === post.user_id && (
+          <div>
+            <button onClick={editPost}>수정</button>
+            <button onClick={deletePost}>삭제</button>
+          </div>
         )}
       </div>
-      <hr />
-      <button onClick={() => navigate(URL.BOARD)}>목록</button>
-      {user && post && user.id === post.user_id && (
-        <div>
-          <button onClick={editPost}>수정</button>
-          <button onClick={deletePost}>삭제</button>
-        </div>
-      )}
     </div>
   );
 };

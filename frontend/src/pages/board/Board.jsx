@@ -39,28 +39,28 @@ const Board = () => {
 
   return (
     <div>
-      <div>게시판</div>
+      <h2>게시판</h2>
+      <label>
+        <span>카테고리</span>
+        <select
+          onChange={(e) =>
+            setSearchOptions((state) => ({
+              ...state,
+              page: 0,
+              category: Number(e.target.value),
+            }))
+          }
+        >
+          <option value={-1}>전체</option>
+          {Object.keys(CATEGORY).map((category) => (
+            <option value={category} key={CATEGORY[category]}>
+              {CATEGORY[category]}
+            </option>
+          ))}
+        </select>
+      </label>
       {board.length > 0 ? (
         <>
-          <label>
-            <span>카테고리</span>
-            <select
-              onChange={(e) =>
-                setSearchOptions((state) => ({
-                  ...state,
-                  page: 0,
-                  category: Number(e.target.value),
-                }))
-              }
-            >
-              <option value={-1}>전체</option>
-              {Object.keys(CATEGORY).map((category) => (
-                <option value={category} key={CATEGORY[category]}>
-                  {CATEGORY[category]}
-                </option>
-              ))}
-            </select>
-          </label>
           <table>
             <thead>
               <tr>
@@ -102,7 +102,7 @@ const Board = () => {
             </button>
             <div>{`${searchOptions.page + 1} / ${totalPage}`}</div>
             <button
-              disabled={searchOptions.page === totalPage}
+              disabled={searchOptions.page + 1 === totalPage}
               onClick={() =>
                 setSearchOptions((state) => ({
                   ...state,
@@ -115,7 +115,7 @@ const Board = () => {
           </div>
         </>
       ) : (
-        <div>게시글이 존재하지 않습니다.</div>
+        <p>게시글이 존재하지 않습니다.</p>
       )}
       <button onClick={createPost}>글쓰기</button>
     </div>

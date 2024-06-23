@@ -1,7 +1,9 @@
 # Frontend
 /frontend/.env
 /frontend/node_modules
+/frontend/public/firebase-messaging-sw.js
 
 # Backend
 /backend/.env
 /backend/node_modules
+/backend/utils/fcm_account.json

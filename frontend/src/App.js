@@ -1,27 +1,46 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
+import { io } from "socket.io-client";
+import "./utils/firebase";
+
 import Footer from "./components/Footer";
 import Header from "./components/Header";
 import Main from "./pages/Main";
 import URL from "./constants/url";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
+import Login from "./pages/login/Login";
+import Register from "./pages/login/Register";
 import Board from "./pages/board/Board";
-
-import "./css/base.css";
-import "./css/components.css";
 import BoardCreate from "./pages/board/BoardCreate";
 import BoardDetail from "./pages/board/BoardDetail";
 import BoardEdit from "./pages/board/BoardEdit";
-import RegisterWait from "./pages/RegisterWait";
+import RegisterWait from "./pages/login/RegisterWait";
 import Admin from "./pages/admin/Admin";
 import AdminManageWaiting from "./pages/admin/AdminManageWaiting";
 
+import "./css/base.css";
+import "./css/components.css";
+
 function App() {
   const location = useLocation();
-  // 임시 유저 State
-  const [user, setUser] = useState();
 
+  const [user, setUser] = useState();
+  const [socket, setSocket] = useState();
+
+  const connectSocket = () => {
+    const socket = io(process.env.REACT_APP_NODEJS);
+    socket.on("connect", () => setSocket(socket));
+    socket.on("disconnect", () => {
+      // 연결 끊김 처리
+    });
+  };
+
+  useEffect(() => {
+    connectSocket();
+  }, []);
+
+  useEffect(() => {
+    if (!socket) return;
+  }, [socket]);
   return location.pathname.includes(URL.ADMIN) ? (
     <Routes>
       <Route path={URL.ADMIN} element={<Admin />} />
@@ -32,12 +51,18 @@ function App() {
       <Header user={user} setUser={setUser} />
       <div className="app_content">
         <Routes>
-          <Route path={URL.MAIN} element={<Main />} />
+          <Route
+            path={URL.MAIN}
+            element={<Main user={user} socket={socket} />}
+          />
           <Route path={URL.LOGIN} element={<Login setUser={setUser} />} />
           <Route path={URL.REGISTER} element={<Register setUser={setUser} />} />
 
           <Route path={URL.BOARD} element={<Board />} />
-          <Route path={URL.BOARD_CREATE} element={<BoardCreate />} />
+          <Route
+            path={URL.BOARD_CREATE}
+            element={<BoardCreate user={user} />}
+          />
           <Route
             path={URL.BOARD_DETAIL}
             element={<BoardDetail user={user} />}

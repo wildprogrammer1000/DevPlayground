@@ -1,8 +1,22 @@
 require("dotenv").config();
+const { addToken, subscribeTopic } = require("./utils/fcm");
+const { onConnection } = require("./utils/socketio");
+const { redis } = require("./utils/redis");
+const cookieParser = require("cookie-parser");
 const express = require("express");
 const { URL } = require("./constants/url");
 const cors = require("cors");
+const { createServer } = require("http");
+const { Server } = require("socket.io");
+
+const app = express();
+const httpServer = createServer(app);
+const io = new Server(httpServer, { cors: process.env.CLIENT_HOST });
+redis.io = io;
+io.on("connection", onConnection);
+
 const {
+  validateSession,
   getGoogleUser,
   refreshGoogleSession,
   registerUser,
@@ -26,8 +40,8 @@ const {
 const { pool } = require("./db/connection");
 const { getWaitingUsers, approveUser, rejectUser } = require("./admin");
 
-const app = express();
-app.use(cors({ origin: "http://localhost:3000" }));
+app.use(cookieParser());
+app.use(cors({ origin: "http://localhost:3000", credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
@@ -43,35 +57,45 @@ app.delete(URL.REGISTER_WAIT, deleteWaitingUser);
 // Board
 app.get(URL.BOARD, getBoard);
 app.get(URL.BOARD_DETAIL, getPost);
-app.post(URL.BOARD_CREATE, createPost);
-app.post(URL.BOARD_DELETE, deletePost);
-app.post(URL.BOARD_EDIT, editPost);
+app.post(URL.BOARD_CREATE, validateSession, createPost);
+app.post(URL.BOARD_DELETE, validateSession, deletePost);
+app.post(URL.BOARD_EDIT, validateSession, editPost);
 app.get(URL.BOARD_COMMENT, getComment);
-app.post(URL.BOARD_COMMENT, addComment);
-app.delete(URL.BOARD_COMMENT, deleteComment);
+app.post(URL.BOARD_COMMENT, validateSession, addComment);
+app.delete(URL.BOARD_COMMENT, validateSession, deleteComment);
 app.get(URL.BOARD_LIKE, getLikes);
-app.post(URL.BOARD_LIKE, toggleLike);
+app.post(URL.BOARD_LIKE, validateSession, toggleLike);
 
 // Admin
 app.get(URL.ADMIN_GET_WATIING_USERS, getWaitingUsers);
 app.post(URL.ADMIN_APPROVE_USER, approveUser);
 app.post(URL.ADMIN_REJECT_USER, rejectUser);
+// app.get(URL.ADMIN_GET_WATIING_USERS, validateSession, getWaitingUsers);
+// app.post(URL.ADMIN_APPROVE_USER, validateSession, approveUser);
+// app.post(URL.ADMIN_REJECT_USER, validateSession, rejectUser);
 
 // Temp
 app.get("/db", async (req, res) => {
   const conn = await pool.getConnection();
-
   if (conn) {
     conn.release();
   }
   res.send("OK");
 });
 
-// app.get("/test", (req, res) => {
-//   console.log("Request Info: ", req);
-//   res.send("ok");
-// });
+app.get("/test", (req, res) => {
+  const { token } = req.query;
+  addToken(token);
 
-app.listen(process.env.EXPRESS_PORT, () => {
+  res.send("ok");
+});
+app.get("/subscribe_test", (req, res) => {
+  const { token, topic } = req.query;
+  subscribeTopic(token, topic);
+
+  res.send("ok");
+});
+
+httpServer.listen(process.env.EXPRESS_PORT, () => {
   console.log("server started");
 });

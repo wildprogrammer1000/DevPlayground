@@ -30,14 +30,25 @@ const QUERY = {
   `,
   BOARD_COUNT: "select convert(Count(*), int) as count from board",
   BOARD_CREATE:
-    "insert into board (user_id, user_nickname, title, content, category) values(?, ?, ?, ?, ?)",
-  BOARD_DETAIL: "select * from board where id=?",
+    "insert into board (user_id, title, content, category) values(?, ?, ?, ?)",
+  BOARD_DETAIL: `
+    select u.nickname, b.id, b.user_id, b.title, b.content, b.category, b.create_time
+    from board b
+    left join (users as u) on (b.user_id = u.id)
+    where b.id=?`,
   BOARD_DELETE: "delete from board where id=?",
   BOARD_EDIT:
     "update board set title=?, content=?, update_time=current_timestamp() where id=?",
 
   BOARD_CATEGORY:
-    "select * from board where category=? order by create_time desc limit ? offset ?",
+    `select u.nickname, Count(c.id) as cmt_count, b.id, b.user_id, b.title, b.content, b.category, b.create_time
+    from board b 
+    left join (comment as c) on (b.id = c.post_id)
+    left join (users as u) on (b.user_id = u.id)
+    where b.category=? 
+    group by b.id
+    order by b.create_time desc 
+    limit ? offset ?`,
   BOARD_CATEGORY_COUNT: "select Count(*) as count from board where category=?",
   BOARD_GET_COMMENT: `
   select c.id, c.content, c.create_time, c.user_id, u.nickname 
@@ -53,6 +64,9 @@ const QUERY = {
   BOARD_CHECK_LIKE: "select * from likes where post_id=? and user_id=?",
   BOARD_ADD_LIKE: "insert into likes (post_id, user_id) values (?, ?)",
   BOARD_REMOVE_LIKE: "delete from likes where post_id=? and user_id=?",
+
+  // SYSTEM LOG
+  SYS_LOG_ADD: `insert into sys_log (action, content, role, user_id, nickname) values (?, ?, ?, ?, ?)`,
 };
 
 module.exports = { QUERY };

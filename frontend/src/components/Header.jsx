@@ -10,7 +10,7 @@ const Header = ({ user, setUser }) => {
   };
   return (
     <header className="header">
-      <div>
+      <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
         <Link
           to={URL.MAIN}
           style={{ fontSize: 24, fontFamily: "Aggro B", letterSpacing: -0.5 }}
@@ -20,9 +20,14 @@ const Header = ({ user, setUser }) => {
         <Link to={URL.BOARD}>게시판</Link>
       </div>
       {user ? (
-        <div>
-          <div>{user.nickname}님 환영해유</div>
-          <div onClick={logOut}>로그아웃</div>
+        <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          <div>{user.nickname}님 환영합니다.</div>
+          <button
+            style={{ border: "2px solid #000", padding: 4 }}
+            onClick={logOut}
+          >
+            로그아웃
+          </button>
         </div>
       ) : (
         <Link to={URL.LOGIN}>로그인</Link>

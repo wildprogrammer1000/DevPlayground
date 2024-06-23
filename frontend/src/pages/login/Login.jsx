@@ -1,9 +1,8 @@
 import { useGoogleLogin } from "@react-oauth/google";
 import { useNavigate } from "react-router-dom";
-import { requestGet } from "../api/fetch";
-import { setSessionItem } from "../utils/storage";
-import URL from "../constants/url";
-import CODE from "../constants/code";
+import { requestGet } from "../../api/fetch";
+import URL from "../../constants/url";
+import CODE from "../../constants/code";
 
 const Login = ({ setUser }) => {
   const navigate = useNavigate();
@@ -16,10 +15,8 @@ const Login = ({ setUser }) => {
         navigate(URL.REGISTER_WAIT, { state: { userInfo: res.data.userInfo } });
         break;
       default:
-        const { userInfo, tokens } = res.data;
+        const { userInfo } = res.data;
         setUser(userInfo);
-        tokens.platform = "google";
-        setSessionItem("userTokens", tokens);
         navigate(URL.MAIN);
     }
   };

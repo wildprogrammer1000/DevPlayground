@@ -3,11 +3,24 @@ const { CODE } = require("../constants/code");
 const { QUERY } = require("../constants/query");
 const axios = require("axios");
 const { OAuth2Client, UserRefreshClient } = require("google-auth-library");
+const { addSysLogCreateUser } = require("../utils");
 const oAuth2Client = new OAuth2Client(
   process.env.GOOGLE_CLIENT_ID,
   process.env.GOOGLE_CLIENT_SECRET,
   "postmessage"
 );
+
+const validateSession = (req, res, next) => {
+  const { session } = req.cookies;
+  if (!session) return res.sendStatus(CODE.SESSION_EXPIRED);
+
+  req.session = JSON.parse(session);
+  req.userInfo = JSON.parse(session).userInfo;
+  const expired = req.session.tokens.expiry_date < Date.now();
+  if (expired) return res.sendStatus(CODE.SESSION_EXPIRED);
+
+  return next();
+};
 const getGoogleUser = async (req, res) => {
   let conn, rows;
   try {
@@ -25,15 +38,24 @@ const getGoogleUser = async (req, res) => {
     rows = await conn.query(QUERY.USER_GET, ["google", data.email]);
 
     if (rows.length > 0) {
-      res.json({ userInfo: rows[0], tokens });
+      // 로그인 성공
+      const session = { userInfo: rows[0], tokens };
+
+      res.cookie("session", JSON.stringify(session), {
+        maxAge: 60 * 60 * 1000,
+        httpOnly: true,
+      });
+      res.json(session);
     } else {
       rows = await conn.query(QUERY.USER_GET_WAITING, ["google", data.email]);
       if (rows.length) {
+        // 가입승인 대기
         res.status(CODE.ACCOUNT_WAITING).json({
           userInfo: rows[0],
           tokens,
         });
       } else {
+        // 닉네임 설정
         res.status(CODE.ACCOUNT_NOT_REGISTERED).json({
           userInfo: { platform: "google", email: data.email },
           tokens,
@@ -74,7 +96,7 @@ const registerUser = async (req, res) => {
     conn = await pool.getConnection();
 
     // 닉네임 중복 체크
-    rows = await pool.query(QUERY.USER_CHECK_NICKNAME, [nickname]);
+    rows = await conn.query(QUERY.USER_CHECK_NICKNAME, [nickname]);
 
     if (rows.length > 0) {
       // 닉네임 중복
@@ -84,7 +106,17 @@ const registerUser = async (req, res) => {
       if (role == "user") query = QUERY.USER_REGISTER;
       else query = QUERY.USER_WAIT;
 
-      rows = await pool.query(query, [role, platform, email, nickname]);
+      rows = await conn.query(query, [role, platform, email, nickname]);
+
+      // 시스템 로그 추가
+      await addSysLogCreateUser(
+        "user_create",
+        { role, platform, email, nickname, tokens },
+        role,
+        rows[0].id,
+        nickname
+      );
+
       tokens.platform = platform;
       res.json({ userInfo: rows[0], tokens });
     }
@@ -126,6 +158,7 @@ const verifyNickname = async (req, res) => {
 };
 
 module.exports = {
+  validateSession,
   getGoogleUser,
   refreshGoogleSession,
   registerUser,

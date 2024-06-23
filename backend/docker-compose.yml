@@ -7,6 +7,8 @@ services:
       - 3306:3306
     volumes:
       - maria:/var/lib/mysql
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     healthcheck:
       test:
         [
@@ -21,6 +23,11 @@ services:
         ]
       timeout: 1s
       retries: 10
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - 6379:6379
 
   nodejs:
     container_name: backend
@@ -32,7 +39,9 @@ services:
       - maria:/app
     restart: always
     depends_on:
-      maria:
+      redis:
+        condition: service_started
+      maria:  
         condition: service_healthy
 volumes:
   maria:

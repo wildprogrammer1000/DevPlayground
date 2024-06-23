@@ -6,12 +6,18 @@ import CODE from "../../constants/code";
 const AdminManageWaiting = () => {
   const [waitingUsers, setWaitingUsers] = useState([]);
   const getWaitingUsers = () => {
-    requestGet(URL.ADMIN_GET_WATIING_USERS, null, (res) => {
-      if (res.status === CODE.SUCCESS) {
-        const { waiting_users } = res.data;
-        setWaitingUsers(waiting_users);
-      }
-    });
+    requestGet(
+      URL.ADMIN_GET_WATIING_USERS,
+      null,
+      (res) => {
+        console.log("response: ", res);
+        if (res.status === CODE.SUCCESS) {
+          const { waiting_users } = res.data;
+          setWaitingUsers(waiting_users);
+        }
+      },
+      (err) => console.log("Error - Admin: ", err)
+    );
   };
   const approve = (user) => {
     requestPost(URL.ADMIN_APPROVE_USER, { user }, (res) => {

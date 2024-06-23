@@ -1,14 +1,14 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import URL from "../../constants/url";
 import { getSessionItem } from "../../utils/storage";
 import { requestPost } from "../../api/fetch";
-
+import { CATEGORY } from "../../constants/constants";
+import URL from "../../constants/url";
 const BoardEdit = () => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [post, setPost] = useState({ title: "", content: "" });
+  const [post, setPost] = useState({ title: "", content: "", category: 0 });
   const handleResponse = (res) => {
     switch (res.status) {
       default:
@@ -38,20 +38,60 @@ const BoardEdit = () => {
   return (
     <div>
       <div>게시글 수정</div>
-      <form onSubmit={handleSubmit}>
-        <input
-          value={post.title}
-          onChange={(e) =>
-            setPost((state) => ({ ...state, title: e.target.value }))
-          }
-        ></input>
+      <hr />
+      <form
+        onSubmit={handleSubmit}
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: 8,
+          maxWidth: 400,
+          padding: 8,
+          margin: "0 auto",
+        }}
+      >
+        <div style={{ display: "flex", gap: 8 }}>
+          <input
+            style={{ flex: 1, height: 32, padding: 8 }}
+            value={post.title}
+            placeholder="제목을 입력해주세요."
+            onChange={(e) =>
+              setPost((state) => ({ ...state, title: e.target.value }))
+            }
+          ></input>
+          <select
+            style={{ padding: 8 }}
+            onChange={(e) =>
+              setPost((state) => ({
+                ...state,
+                category: Number(e.target.value),
+              }))
+            }
+          >
+            {Object.keys(CATEGORY).map((category) => (
+              <option value={category} key={CATEGORY[category]}>
+                {CATEGORY[category]}
+              </option>
+            ))}
+          </select>
+        </div>
         <textarea
+          placeholder="내용을 입력해주세요."
           value={post.content}
+          style={{ minHeight: 100, padding: 8 }}
           onChange={(e) =>
             setPost((state) => ({ ...state, content: e.target.value }))
           }
         ></textarea>
-        <button>저장</button>
+        <button style={{ height: 32 }}>저장</button>
+        <button
+          type="button"
+          onClick={() =>
+            navigate(URL.BOARD_DETAIL, { state: { post_id: post.id } })
+          }
+        >
+          목록
+        </button>
       </form>
     </div>
   );

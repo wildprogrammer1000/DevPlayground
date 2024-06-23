@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { requestGet, requestPost } from "../api/fetch";
-import URL from "../constants/url";
-import CODE from "../constants/code";
-import { setSessionItem } from "../utils/storage";
+import { requestGet, requestPost } from "../../api/fetch";
+import { setSessionItem } from "../../utils/storage";
+import URL from "../../constants/url";
+import CODE from "../../constants/code";
 
 const Register = ({ setUser }) => {
   const navigate = useNavigate();
@@ -16,9 +16,9 @@ const Register = ({ setUser }) => {
   });
   const [nicknameVerified, setNicknameVerified] = useState(false);
 
-  const onChangeRole = (e) => {
+  const onChangeRole = (e) =>
     setInputs((state) => ({ ...state, role: e.target.value }));
-  };
+
   const handleResponse = (res) => {
     switch (res.status) {
       case CODE.ACCOUNT_NICKNAME_DUPLICATED:
