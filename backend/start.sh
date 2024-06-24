@@ -1,3 +1,4 @@
 docker-compose down &&
+docker image prune -f && 
 docker container prune -f &&
-docker-compose up
+docker-compose up --build
