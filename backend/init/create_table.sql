@@ -40,3 +40,12 @@ create table if not exists likes (
 	post_id int not null,
 	user_id int not null
 );
+
+create table if not exists sys_log (
+	id int primary key auto_increment,
+	user_id int not null,
+	role varchar(10) not null,
+	content text not null,
+	action varchar(30) not null,
+	foreign key (user_id) references users(id)
+);
