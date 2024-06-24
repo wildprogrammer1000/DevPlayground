@@ -3,7 +3,8 @@ create table if not exists users (
 	platform varchar(20) not null,
 	role varchar(10) not null default "user",
 	email varchar(50) not null,
-	nickname varchar(20) unique
+	nickname varchar(20) unique,
+	create_time timestamp default current_timestamp()
 );
 
 create table if not exists waiting_users (
