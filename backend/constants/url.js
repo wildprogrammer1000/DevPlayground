@@ -1,9 +1,10 @@
 const URL = {
   MAIN: "/",
+
+  // 로그인
   LOGIN: "/login",
   LOGIN_GOOGLE: "/login/google",
   REFRESH_TOKEN_GOOGLE: "/refresh_token/google",
-
   REGISTER: "/register",
   REGISTER_WAIT: "/register/wait",
   VERIFY_NICKNAME: "/register/verify",
@@ -23,6 +24,16 @@ const URL = {
   BOARD_EDIT: "/board/edit",
   BOARD_COMMENT: "/board/comment",
   BOARD_LIKE: "/board/like",
+
+  // 친구
+  FRIEND_GET: "/friend",
+  FRIEND_REQUEST: "/friend/request",
+  FRIEND_CANCEL: "/friend/cancel",
+  FRIEND_ACCEPT: "/friend/accept",
+  FRIEND_REFUSE: "/friend/refuse",
+
+  // 알림
+  NOTIFICATION_GET: "/notification",
 };
 
 module.exports = { URL };

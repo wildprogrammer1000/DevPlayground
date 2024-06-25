@@ -19,6 +19,7 @@ import AdminManageWaiting from "./pages/admin/AdminManageWaiting";
 
 import "./css/base.css";
 import "./css/components.css";
+import Friend from "./components/Friend";
 
 function App() {
   const location = useLocation();
@@ -41,6 +42,7 @@ function App() {
   useEffect(() => {
     if (!socket) return;
   }, [socket]);
+  
   return location.pathname.includes(URL.ADMIN) ? (
     <Routes>
       <Route path={URL.ADMIN} element={<Admin />} />
@@ -70,6 +72,7 @@ function App() {
           <Route path={URL.BOARD_EDIT} element={<BoardEdit />} />
           <Route path={URL.REGISTER_WAIT} element={<RegisterWait />} />
         </Routes>
+        {user && <Friend socket={socket} user={user} />}
       </div>
 
       <Footer />

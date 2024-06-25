@@ -1,4 +1,7 @@
 import { useState, useEffect, useRef } from "react";
+import { requestPost } from "../api/fetch";
+import URL from "../constants/url";
+import CODE from "../constants/code";
 
 const Chat = ({ socket, channel, user }) => {
   const joined = useRef(false);
@@ -7,17 +10,22 @@ const Chat = ({ socket, channel, user }) => {
 
   const [chatMessage, setChatMessage] = useState("");
   const [messages, setMessages] = useState([]);
+  const [userInfo, setUserInfo] = useState();
 
-  const joinChannel = () => socket.emit("join", { channel });
-  const onJoin = () => (joined.current = true);
+  const joinChannel = () => socket && socket.emit("join", { channel, user });
+  const onJoin = () => {
+    if (joined.current) return;
+    joined.current = true;
+  };
 
   const onMessage = (data) => {
-    if (data.channel !== channel) return;
-    setMessages((state) => [...state, data]);
+    const parsedData = JSON.parse(data);
+    setMessages((state) => [...state, parsedData]);
   };
 
   const sendChat = (e) => {
     e.preventDefault();
+    if (chatMessage.length === 0) return;
     if (!user) {
       alert("로그인 ㄱㄱ");
       return;
@@ -34,7 +42,18 @@ const Chat = ({ socket, channel, user }) => {
       console.error("Error - Send Chat: ", `channel: ${channel} | `, err);
     }
   };
+  const requestFriend = () => {
+    if (window.confirm(`${userInfo.nickname}님께 친구요청을 보낼까요?`)) {
+      requestPost(URL.FRIEND_REQUEST, { receiver_id: userInfo.id }, (res) => {
+        if (res.status === CODE.SUCCESS) {
+          alert(userInfo.nickname + "님께  친구 요청을 보냈습니다.");
+          setUserInfo(null);
+        }
+      });
+    }
+  };
   useEffect(() => {
+    joinChannel();
     return () => {
       socketRef.current && socketRef.current.off("join", onJoin);
       socketRef.current && socketRef.current.off("message", onMessage);
@@ -44,8 +63,14 @@ const Chat = ({ socket, channel, user }) => {
   useEffect(() => {
     if (!socket || joined.current) return;
     socketRef.current = socket;
-    socket.on("join", onJoin);
-    socket.on("message", onMessage);
+    socket.on("joined", onJoin);
+
+    if (channel === "all") {
+      socket.on("all", onMessage);
+    } else {
+      socket.on(`room_${user.id}`, onMessage);
+      socket.on(`room_${channel}`, onMessage);
+    }
     joinChannel();
   }, [socket]);
 
@@ -91,7 +116,9 @@ const Chat = ({ socket, channel, user }) => {
               }}
             >
               {(!user || user?.id !== message.user.id) && (
-                <span>{message.user.nickname}</span>
+                <span onClick={() => setUserInfo(message.user)}>
+                  {message.user.nickname}
+                </span>
               )}
               <span style={{ padding: 8, border: "1px solid #000" }}>
                 {message.message}
@@ -102,13 +129,32 @@ const Chat = ({ socket, channel, user }) => {
           <div></div>
         )}
       </ul>
-      <form onSubmit={sendChat}>
+      <form
+        onSubmit={sendChat}
+        style={{ display: "flex", alignItems: "center" }}
+      >
         <input
+          style={{ flex: 1 }}
           value={chatMessage}
           onChange={(e) => setChatMessage(e.target.value)}
         ></input>
         <button type="submit">전송</button>
       </form>
+      {userInfo && (
+        <div
+          style={{
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
+        >
+          <button onClick={() => setUserInfo(null)}>닫기</button>
+          <div>이름: {user.nickname}</div>
+          {/* 이미 나의 친구인지 체크필요 */}
+          <button onClick={requestFriend}>친구신청</button>
+        </div>
+      )}
     </>
   ) : (
     <div>연결 안됨</div>

@@ -24,6 +24,16 @@ const URL = {
   BOARD_EDIT: "/board/edit",
   BOARD_COMMENT: "/board/comment",
   BOARD_LIKE: "/board/like",
+
+  // 친구
+  FRIEND_GET: "/friend",
+  FRIEND_REQUEST: "/friend/request",
+  FRIEND_CANCEL: "/friend/cancel",
+  FRIEND_ACCEPT: "/friend/accept",
+  FRIEND_REFUSE: "/friend/refuse",
+
+  // 알림
+  NOTIFICATION_GET: "/notification",
 };
 
 export default URL;

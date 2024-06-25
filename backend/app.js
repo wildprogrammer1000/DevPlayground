@@ -1,6 +1,6 @@
 require("dotenv").config();
 const { addToken, subscribeTopic } = require("./utils/fcm");
-const { onConnection } = require("./utils/socketio");
+const { socketio, onConnection } = require("./utils/socketio");
 const { redis } = require("./utils/redis");
 const cookieParser = require("cookie-parser");
 const express = require("express");
@@ -8,11 +8,20 @@ const { URL } = require("./constants/url");
 const cors = require("cors");
 const { createServer } = require("http");
 const { Server } = require("socket.io");
+const {
+  getFriend,
+  requestFriend,
+  cancelFriend,
+  acceptFriend,
+  refuseFriend,
+} = require("./friend");
+const { getNotifications } = require("./notification");
 
 const app = express();
 const httpServer = createServer(app);
 const io = new Server(httpServer, { cors: process.env.CLIENT_HOST });
 redis.io = io;
+socketio.io = io;
 io.on("connection", onConnection);
 
 const {
@@ -67,12 +76,19 @@ app.get(URL.BOARD_LIKE, getLikes);
 app.post(URL.BOARD_LIKE, validateSession, toggleLike);
 
 // Admin
-app.get(URL.ADMIN_GET_WATIING_USERS, getWaitingUsers);
-app.post(URL.ADMIN_APPROVE_USER, approveUser);
-app.post(URL.ADMIN_REJECT_USER, rejectUser);
-// app.get(URL.ADMIN_GET_WATIING_USERS, validateSession, getWaitingUsers);
-// app.post(URL.ADMIN_APPROVE_USER, validateSession, approveUser);
-// app.post(URL.ADMIN_REJECT_USER, validateSession, rejectUser);
+app.get(URL.ADMIN_GET_WATIING_USERS, validateSession, getWaitingUsers);
+app.post(URL.ADMIN_APPROVE_USER, validateSession, approveUser);
+app.post(URL.ADMIN_REJECT_USER, validateSession, rejectUser);
+
+// Friend
+app.get(URL.FRIEND_GET, validateSession, getFriend);
+app.post(URL.FRIEND_REQUEST, validateSession, requestFriend);
+app.post(URL.FRIEND_CANCEL, validateSession, cancelFriend);
+app.post(URL.FRIEND_ACCEPT, validateSession, acceptFriend);
+app.post(URL.FRIEND_REFUSE, validateSession, refuseFriend);
+
+// Notification
+app.get(URL.NOTIFICATION_GET, validateSession, getNotifications);
 
 // Temp
 app.get("/db", async (req, res) => {

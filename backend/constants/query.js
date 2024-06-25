@@ -40,8 +40,7 @@ const QUERY = {
   BOARD_EDIT:
     "update board set title=?, content=?, update_time=current_timestamp() where id=?",
 
-  BOARD_CATEGORY:
-    `select u.nickname, Count(c.id) as cmt_count, b.id, b.user_id, b.title, b.content, b.category, b.create_time
+  BOARD_CATEGORY: `select u.nickname, Count(c.id) as cmt_count, b.id, b.user_id, b.title, b.content, b.category, b.create_time
     from board b 
     left join (comment as c) on (b.id = c.post_id)
     left join (users as u) on (b.user_id = u.id)
@@ -67,6 +66,25 @@ const QUERY = {
 
   // SYSTEM LOG
   SYS_LOG_ADD: `insert into sys_log (action, content, role, user_id, nickname) values (?, ?, ?, ?, ?)`,
+
+  // Friend
+  FRIEND_GET: `
+  select u.nickname, u.id 
+  from friends f
+  left join (users u) on (f.user2_id = u.id)
+  where f.user1_id=?
+  `,
+  FRIEND_REQUEST: `insert into friends (user1_id, user2_id, state) values (?, ?, ?)`,
+  FRIEND_CANCEL: "delete from friends where user1_id=? and user2_id=?",
+  FRIEND_CHECK_REQUEST:
+    "select * from friends where user1_id=? and user2_id=? and state=?",
+  FRIEND_ACCEPT: "update friends set state=? where user1_id=? and user2_id=?",
+
+  // Notification
+  NOTIFICATION_SEND: `insert into notifications (type, sender_id, receiver_id, content) values (?, ?, ?, ?)`,
+  NOTIFICATION_GET: `select * from notifications where receiver_id=? or sender_id=?`,
+  NOTIFICATION_GET_BY_TYPE: `select * from notifications where (receiver_id=? or sender_id=?) and type=?`,
+  NOTIFICATION_DELETE: `delete from notifications where type=? and sender_id=? and receiver_id=?`,
 };
 
 module.exports = { QUERY };
