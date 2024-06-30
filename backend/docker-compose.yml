@@ -19,7 +19,7 @@ services:
           "localhost",
           "-u",
           "root",
-          "-p$$MARIADB_PASSWORD",
+          "-p$MARIADB_PASSWORD",
         ]
       timeout: 1s
       retries: 10
