@@ -99,12 +99,7 @@ app.get("/db", async (req, res) => {
   res.send("OK");
 });
 
-app.get("/test", (req, res) => {
-  const { token } = req.query;
-  addToken(token);
-
-  res.send("ok");
-});
+app.get("/", (req, res) => res.send("Healthy"));
 app.get("/subscribe_test", (req, res) => {
   const { token, topic } = req.query;
   subscribeTopic(token, topic);
