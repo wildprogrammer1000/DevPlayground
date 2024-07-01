@@ -50,7 +50,7 @@ const { pool } = require("./db/connection");
 const { getWaitingUsers, approveUser, rejectUser } = require("./admin");
 
 app.use(cookieParser());
-app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+app.use(cors({ origin: process.env.CLIENT_HOST, credentials: true }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

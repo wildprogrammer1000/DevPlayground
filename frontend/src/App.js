@@ -20,7 +20,7 @@ import AdminManageWaiting from "./pages/admin/AdminManageWaiting";
 import "./css/base.css";
 import "./css/components.css";
 import Friend from "./components/Friend";
-
+console.log("ENV: " + process.env.NODE_ENV)
 function App() {
   const location = useLocation();
 
