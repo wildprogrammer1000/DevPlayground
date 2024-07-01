@@ -85,6 +85,8 @@ const refreshGoogleSession = async (req, res) => {
   } catch (err) {
     console.error("Error - Refresh Google Session: ", err);
     res.status(500).send(err);
+  } finally {
+    if (conn) conn.release();
   }
 };
 

@@ -48,6 +48,7 @@ create table if not exists sys_log (
 	role varchar(10) not null,
 	content text not null,
 	action varchar(30) not null,
+	nickname varchar(20) not null,
 	foreign key (user_id) references users(id)
 );
 

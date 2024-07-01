@@ -19,7 +19,9 @@ const { getNotifications } = require("./notification");
 
 const app = express();
 const httpServer = createServer(app);
-const io = new Server(httpServer, { cors: process.env.CLIENT_HOST });
+const io = new Server(httpServer, {
+  cors: [process.env.CLIENT_HOST1, process.env.CLIENT_HOST2],
+});
 redis.io = io;
 socketio.io = io;
 io.on("connection", onConnection);
