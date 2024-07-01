@@ -46,6 +46,7 @@ const {
   getLikes,
   toggleLike,
 } = require("./board/board");
+const { getMypage, deleteUser } = require("./mypage/mypage");
 
 // Temp
 const { pool } = require("./db/connection");
@@ -96,6 +97,9 @@ app.post(URL.FRIEND_REFUSE, validateSession, refuseFriend);
 
 // Notification
 app.get(URL.NOTIFICATION_GET, validateSession, getNotifications);
+
+// Mypage
+app.get(URL.MYPAGE_GET, validateSession, getMypage);
 
 // Temp
 app.get("/db", async (req, res) => {

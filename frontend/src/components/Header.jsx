@@ -21,6 +21,7 @@ const Header = ({ user, setUser }) => {
       </div>
       {user ? (
         <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+          <Link to={URL.MYPAGE_GET}>마이페이지</Link>
           <div>{user.nickname}님 환영합니다.</div>
           <button
             style={{ border: "2px solid #000", padding: 4 }}
