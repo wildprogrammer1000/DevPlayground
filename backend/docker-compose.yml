@@ -7,8 +7,6 @@ services:
       - 3306:3306
     volumes:
       - maria:/var/lib/mysql
-    environment:
-      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
     healthcheck:
       test:
         [
@@ -34,7 +32,7 @@ services:
     build: "./"
     env_file: ".env"
     ports:
-      - 4000:4000
+      - 80:80
     volumes:
       - maria:/app
     restart: always
