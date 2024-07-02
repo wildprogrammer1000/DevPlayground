@@ -1,17 +1,18 @@
-import { useEffect, useState } from "react";
-import { getNotificationByType } from "./Notification";
-import { requestGet, requestPost } from "../api/fetch";
-import CODE from "../constants/code";
-import URL from "../constants/url";
-import Chat from "./Chat";
+import { useEffect, useRef, useState } from "react";
+import { getNotificationByType } from "../Notification";
+import { requestGet, requestPost } from "../../api/fetch";
+import CODE from "../../constants/code";
+import URL from "../../constants/url";
+import FriendChat from "../chat/FriendChat";
 
 const Friend = ({ socket, user }) => {
+  const isOpen = useRef(false);
   const [open, setOpen] = useState(false);
   const [badge, setBadge] = useState(false);
 
   const [notifications, setNotifications] = useState([]);
   const [friends, setFriends] = useState([]);
-  const [dialogId, setDialogId] = useState();
+  const [currentDialog, setCurrentDialog] = useState();
 
   const getFriendNotification = () => {
     getNotificationByType(CODE.NOTIFICATION_FRIEND, (res) => {
@@ -25,7 +26,15 @@ const Friend = ({ socket, user }) => {
     requestGet(URL.FRIEND_GET, null, (res) => {
       if (res.status === CODE.SUCCESS) {
         const { friends } = res.data;
-        setFriends(friends);
+
+        setFriends((state) => {
+          const temp = [...state];
+          friends.forEach((friend) => {
+            const exist = temp.find((f) => f.id === friend.id);
+            if (!exist) temp.push(friend);
+          });
+          return temp;
+        });
       }
     });
   };
@@ -58,39 +67,40 @@ const Friend = ({ socket, user }) => {
       });
     }
   };
-  const onMessage = (data) => {
-    !open && setBadge(true);
-    const { user, message } = JSON.parse(data);
-    if (open) {
-      setFriends((state) => {
-        const temp = [...state];
-        temp.map((friend) => {
-          if (friend.id === user.id) friend.last_message = message;
-          return friend;
-        });
-        return temp;
+
+  const onFriendMessage = (data) => {
+    !isOpen.current && setBadge(true);
+    setFriends((state) => {
+      const temp = [...state];
+      temp.map((friend) => {
+        if (friend.id === data.user.id) friend.last_message = data.message;
+        return friend;
       });
-    } else setBadge(true);
+      return temp;
+    });
   };
-  const joinChannel = () => socket.emit("join", { user });
 
   useEffect(() => {
+    getFriendNotification();
+    getFriends();
+    isOpen.current = open;
     if (open) {
-      getFriendNotification();
-      getFriends();
       setBadge(false);
     } else {
-      setDialogId(null);
+      if (!open) setCurrentDialog(null);
     }
-    socket.on(`room_${user.id}`, onMessage);
-    return () => {
-      socket.off(`room_${user.id}`, onMessage);
-    };
   }, [open]);
 
   useEffect(() => {
-    joinChannel();
-  }, []);
+    if (socket) {
+      socket.on("onFriendMessage", onFriendMessage);
+    }
+    return () => {
+      if (socket) {
+        socket.off("onFriendMessage", onFriendMessage);
+      }
+    };
+  }, [socket]);
 
   return (
     <>
@@ -114,12 +124,27 @@ const Friend = ({ socket, user }) => {
               alignItems: "center",
             }}
           >
-            <h2>친구</h2>
-            <button onClick={() => setOpen(false)}>닫기</button>
+            <h2>
+              {currentDialog ? (
+                <>
+                  <button onClick={() => setCurrentDialog(null)}>&lt;</button>
+                  <span>{currentDialog.nickname}</span>
+                </>
+              ) : (
+                "친구"
+              )}
+            </h2>
+            <button
+              onClick={() => {
+                setOpen(false);
+              }}
+            >
+              닫기
+            </button>
           </div>
 
-          {dialogId ? (
-            <Chat socket={socket} channel={dialogId} user={user} />
+          {currentDialog ? (
+            <FriendChat socket={socket} friend={currentDialog} user={user} />
           ) : (
             <div>
               <div>받은 요청</div>
@@ -196,7 +221,7 @@ const Friend = ({ socket, user }) => {
                       >
                         <span>{friend.nickname}</span>
                         <div>
-                          <button onClick={() => setDialogId(friend.id)}>
+                          <button onClick={() => setCurrentDialog(friend)}>
                             채팅
                           </button>
                           <button>:</button>

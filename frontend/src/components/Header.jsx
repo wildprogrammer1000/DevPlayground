@@ -1,12 +1,18 @@
 import { Link, useNavigate } from "react-router-dom";
 import URL from "../constants/url";
+import { requestGet } from "../api/fetch";
+import CODE from "../constants/code";
 
 const Header = ({ user, setUser }) => {
   const navigate = useNavigate();
   const logOut = () => {
-    alert("로그아웃 되었습니다.");
-    setUser(null);
-    navigate(URL.MAIN);
+    requestGet(URL.LOGOUT, null, (res) => {
+      if (res.status === CODE.SUCCESS) {
+        alert("로그아웃 되었습니다.");
+        setUser(null);
+        navigate(URL.MAIN);
+      }
+    });
   };
   return (
     <header className="header">

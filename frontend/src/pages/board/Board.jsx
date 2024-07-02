@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { requestGet } from "../../api/fetch";
 import { useNavigate } from "react-router-dom";
-import { getSessionItem } from "../../utils/storage";
 import { CATEGORY } from "../../constants/constants";
 import URL from "../../constants/url";
 
 const columns = ["카테고리", "제목", "내용", "작성자"];
 
-const Board = () => {
+const Board = ({ user }) => {
   const navigate = useNavigate();
   const [board, setBoard] = useState([]);
   const [totalPage, setTotalPage] = useState(0);
@@ -25,11 +24,7 @@ const Board = () => {
     });
   };
   const createPost = () => {
-    const session = getSessionItem("userTokens");
-    if (!session) {
-      alert("로그인이 필요합니다.");
-      return;
-    }
+    if (!user) return alert("로그인이 필요합니다.");
     navigate(URL.BOARD_CREATE);
   };
 

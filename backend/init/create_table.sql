@@ -58,7 +58,8 @@ create table if not exists friends (
 	state int default 0,
 	create_time timestamp default current_timestamp(),
 	foreign key (user1_id) references users(id) on delete cascade,
-	foreign key (user2_id) references users(id) on delete cascade
+	foreign key (user2_id) references users(id) on delete cascade,
+	unique (user1_id, user2_id)
 );
 
 create table if not exists notifications (

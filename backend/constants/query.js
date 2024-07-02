@@ -78,13 +78,31 @@ const QUERY = {
   FRIEND_CANCEL: "delete from friends where user1_id=? and user2_id=?",
   FRIEND_CHECK_REQUEST:
     "select * from friends where user1_id=? and user2_id=? and state=?",
-  FRIEND_ACCEPT: "update friends set state=? where user1_id=? and user2_id=?",
+  // FRIEND_ACCEPT: "update friends set state=? where user1_id=? and user2_id=?",
+  FRIEND_ACCEPT: `
+  insert into friends 
+  (user1_id, user2_id, state) values (?, ?, ?)
+  on duplicate key update state=?
+  `,
+  FRIEND_CHECK:
+    "select * from friends where (user1_id=? and user2_id=?) or (user1_id=? and user2_id=?)",
 
   // Notification
   NOTIFICATION_SEND: `insert into notifications (type, sender_id, receiver_id, content) values (?, ?, ?, ?)`,
   NOTIFICATION_GET: `select * from notifications where receiver_id=? or sender_id=?`,
   NOTIFICATION_GET_BY_TYPE: `select * from notifications where (receiver_id=? or sender_id=?) and type=?`,
   NOTIFICATION_DELETE: `delete from notifications where type=? and sender_id=? and receiver_id=?`,
+
+  // Message
+  MESSAGE_GET: `
+  select u.nickname, m.sender_id as id, m.content, m.create_time
+  from messages m
+  left join (users u) on (m.sender_id = u.id)
+  where m.sender_id=? and m.receiver_id=?
+  limit 100
+  `,
+  MESSAGE_SEND:
+    "insert into messages (sender_id, receiver_id, content) values (?, ?, ?)",
 };
 
 module.exports = { QUERY };

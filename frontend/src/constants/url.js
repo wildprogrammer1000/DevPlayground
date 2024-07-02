@@ -3,8 +3,10 @@ const URL = {
 
   // 로그인
   LOGIN: "/login",
+  LOGOUT: "/logout",
   LOGIN_GOOGLE: "/login/google",
   REFRESH_TOKEN_GOOGLE: "/refresh_token/google",
+  REFRESH_SESSION: "/refresh_session",
   REGISTER: "/register",
   REGISTER_WAIT: "/register/wait",
   VERIFY_NICKNAME: "/register/verify",
@@ -31,6 +33,7 @@ const URL = {
   FRIEND_CANCEL: "/friend/cancel",
   FRIEND_ACCEPT: "/friend/accept",
   FRIEND_REFUSE: "/friend/refuse",
+  FRIEND_MESSAGE: "/friend/message",
 
   // 알림
   NOTIFICATION_GET: "/notification",

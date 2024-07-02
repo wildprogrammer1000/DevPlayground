@@ -1,23 +1,52 @@
 // const { pub, sub } = require("./redis");
-const socketio = { io: null };
+let io = null;
+const socketMap = new Map();
 
-const onConnection = (socket) => {
-  socket.on("message", (data) => {
-    // pub.publish(data.channel, JSON.stringify(data));
-    const { channel } = data;
-    const targetChannel = channel === "all" ? "all" : `room_${channel}`;
-    socketio.io.to(targetChannel).emit(targetChannel, JSON.stringify(data));
+const setSocketIO = (socketIO) => (io = socketIO);
+
+const onJoinChat = (socket, data) => {
+  const { channel, user } = data;
+  socket.join(channel);
+  socketMap.set(socket.id, { socket, user });
+
+  io.to(channel).emit("onJoinChat", {
+    channel,
+    user,
+    user_count: socketMap.size,
   });
-  socket.on("join", ({ channel, user }) => {
-    if (channel === "all") socket.join("all");
-    else {
-      console.log("room joined: ", channel, user.id);
-      channel && socket.join(`room_${channel}`);
-      user && socket.join(`room_${user.id}`);
-    }
-    socket.emit("joined", { channel, user });
-    // sub.subscribe(channel);
-  });
+  socket.broadcast.emit("updateUserCount", { count: socketMap.size, user });
 };
 
-module.exports = { socketio, onConnection };
+const onSendMessage = (data) => {
+  const { channel } = data;
+  io.to(channel).emit("onMessage", data);
+};
+
+const onDisconnect = (socket) => {
+  const disconnected = socketMap.get(socket.id);
+  if (disconnected) socketMap.delete(socket.id);
+  socket.broadcast.emit("updateUserCount", { count: socketMap.size });
+};
+
+const onConnection = (socket) => {
+  socket.on("joinChat", (data) => onJoinChat(socket, data));
+  socket.on("sendMessage", onSendMessage);
+  socket.on("disconnect", () => onDisconnect(socket));
+  // pub.publish(data.channel, JSON.stringify(data));
+  // sub.subscribe(channel);
+};
+
+const sendMessage = ({ receiver_id, sender, message }) => {
+  let presence;
+
+  socketMap.forEach((value) => {
+    const user = value.user;
+    if (user && user.id === receiver_id) presence = value;
+  });
+
+  if (presence) {
+    presence.socket.emit("onFriendMessage", { user: sender, message });
+  }
+};
+
+module.exports = { setSocketIO, onConnection, sendMessage };
