@@ -28,6 +28,7 @@
 .header .menu {
   display: flex;
   flex: 1;
+  align-items: center;
   justify-content: space-between;
 }
 .header .menu .btn_close {
@@ -41,3 +42,9 @@
   height: 80px;
   padding: 16px;
 }
+
+/* Chat */
+.chat .form {height:40px;}
+.chat .form input {height: 100%; padding: 0 8px;}
+.chat .form button{height: 100%;}
+

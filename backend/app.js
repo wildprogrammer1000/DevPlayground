@@ -13,6 +13,7 @@ const {
   requestFriend,
   cancelFriend,
   acceptFriend,
+  deleteFriend,
   refuseFriend,
   getFriendMessages,
   sendFriendMessage,
@@ -98,8 +99,9 @@ app.get(URL.FRIEND_GET, validateSession, getFriend);
 app.post(URL.FRIEND_REQUEST, validateSession, requestFriend);
 app.post(URL.FRIEND_CANCEL, validateSession, cancelFriend);
 app.post(URL.FRIEND_ACCEPT, validateSession, acceptFriend);
+app.post(URL.FRIEND_DELETE, validateSession, deleteFriend);
 app.post(URL.FRIEND_REFUSE, validateSession, refuseFriend);
-app.get(URL.FRIEND_MESSAGE, validateSession, getFriendMessages)
+app.get(URL.FRIEND_MESSAGE, validateSession, getFriendMessages);
 app.post(URL.FRIEND_MESSAGE, validateSession, sendFriendMessage);
 
 // Notification

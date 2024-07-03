@@ -32,6 +32,7 @@ const URL = {
   FRIEND_REQUEST: "/friend/request",
   FRIEND_CANCEL: "/friend/cancel",
   FRIEND_ACCEPT: "/friend/accept",
+  FRIEND_DELETE: "/friend/delete",
   FRIEND_REFUSE: "/friend/refuse",
   FRIEND_MESSAGE: "/friend/message",
 

@@ -34,6 +34,7 @@ li {
 a {
   text-decoration: none;
 }
+h1, h2 {margin: 0;}
 
 .center {
   position: absolute;

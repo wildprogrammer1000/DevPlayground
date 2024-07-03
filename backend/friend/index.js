@@ -120,6 +120,27 @@ const acceptFriend = async (req, res) => {
     if (conn) conn.release();
   }
 };
+const deleteFriend = async (req, res) => {
+  let conn;
+  try {
+    const { user_id } = req.body;
+    const userInfo = req.userInfo;
+    conn = await pool.getConnection();
+
+    await conn.query(QUERY.FRIEND_DELETE, [
+      user_id,
+      userInfo.id,
+      userInfo.id,
+      user_id,
+    ]);
+
+    res.sendStatus(CODE.SUCCESS);
+  } catch (err) {
+    console.error("Error - Accept Friend: ", err);
+  } finally {
+    if (conn) conn.release();
+  }
+};
 const refuseFriend = async (req, res) => {
   let conn;
   try {
@@ -185,7 +206,7 @@ const sendFriendMessage = async (req, res) => {
   try {
     const { message, user_id } = req.body;
     const userInfo = req.userInfo;
-
+    if (!user_id || message.length === 0) res.sendStatus(501);
     conn = await pool.getConnection();
     await conn.query(QUERY.MESSAGE_SEND, [userInfo.id, user_id, message]);
     sendMessage({ receiver_id: user_id, sender: userInfo, message });
@@ -202,6 +223,7 @@ module.exports = {
   requestFriend,
   cancelFriend,
   acceptFriend,
+  deleteFriend,
   refuseFriend,
   getFriendMessages,
   sendFriendMessage,

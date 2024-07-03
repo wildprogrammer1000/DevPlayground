@@ -118,10 +118,8 @@ const registerUser = async (req, res) => {
       // 시스템 로그 추가
       await addSysLogCreateUser(
         "user_create",
-        { role, platform, email, nickname, tokens },
-        role,
-        rows[0].id,
-        nickname
+        { role, platform, email, nickname },
+        { id: rows[0].id, role, nickname }
       );
 
       tokens.platform = platform;

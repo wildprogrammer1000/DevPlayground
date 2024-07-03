@@ -1,14 +1,14 @@
 const { QUERY } = require("../constants/query");
 const { pool } = require("../db/connection");
 
-const addSysLogCreateUser = async (action, content, user) => {
+const addSysLogCreateUser = async (action, content = {}, user) => {
   let conn;
   try {
     conn = await pool.getConnection();
 
     await conn.query(QUERY.SYS_LOG_ADD, [
       action,
-      content,
+      JSON.stringify(content),
       user.role,
       user.id,
       user.nickname,

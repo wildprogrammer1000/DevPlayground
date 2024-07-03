@@ -50,7 +50,6 @@ const Chat = ({ socket, channel, user }) => {
     setMessages((state) => [...state, { user, message }]);
   };
   const onUpdateUserCount = ({ count, user }) => {
-    console.log("data: ", count, user);
     if (user) {
       const newMessage = {
         user,
@@ -71,7 +70,6 @@ const Chat = ({ socket, channel, user }) => {
           alert(userInfo.nickname + "님께  친구 요청을 보냈어요.");
           setUserInfo(null);
         } else if (res.status === CODE.FRIEND_DUPLICATED) {
-          console.log("FRIEND REQUEST RESULT: ", res.data);
           const { state, user1_id } = res.data;
           switch (state) {
             case CODE.FRIEND_ACCEPTED:
@@ -124,7 +122,7 @@ const Chat = ({ socket, channel, user }) => {
       });
   }, [messages]);
   return channelInfo.joined ? (
-    <div>
+    <div className="chat">
       {channel === "all" && <div>{channelInfo.userCount}명 참여중</div>}
       <ul
         ref={messageContainer}
@@ -165,6 +163,7 @@ const Chat = ({ socket, channel, user }) => {
       </ul>
       <form
         style={{ display: "flex", alignItems: "center" }}
+        className="form"
         onSubmit={sendChat}
       >
         <input

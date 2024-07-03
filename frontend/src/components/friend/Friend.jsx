@@ -4,15 +4,36 @@ import { requestGet, requestPost } from "../../api/fetch";
 import CODE from "../../constants/code";
 import URL from "../../constants/url";
 import FriendChat from "../chat/FriendChat";
+import style from "../../css/module/Friend.module.css";
+
+const Menu = {
+  LIST: 0,
+  REQUEST_RECEIVE: 1,
+  REQUEST_SEND: 2,
+  BLOCK: 3,
+};
 
 const Friend = ({ socket, user }) => {
   const isOpen = useRef(false);
   const [open, setOpen] = useState(false);
   const [badge, setBadge] = useState(false);
+  const [currentMenu, setCurrentMenu] = useState(Menu.LIST);
+  const [menuId, setMenuId] = useState();
+  const [recentMessage, setRecentMessage] = useState({});
 
   const [notifications, setNotifications] = useState([]);
   const [friends, setFriends] = useState([]);
   const [currentDialog, setCurrentDialog] = useState();
+
+  const friendList = friends.filter(
+    (friend) => friend.state === CODE.FRIEND_ACCEPTED
+  );
+  const receiveRequests = notifications.filter(
+    (noti) => noti.receiver_id === user.id && noti.type === CODE.FRIEND_PENDING
+  );
+  const sendRequests = notifications.filter(
+    (noti) => noti.sender_id === user.id && noti.type === CODE.FRIEND_PENDING
+  );
 
   const getFriendNotification = () => {
     getNotificationByType(CODE.NOTIFICATION_FRIEND, (res) => {
@@ -26,15 +47,7 @@ const Friend = ({ socket, user }) => {
     requestGet(URL.FRIEND_GET, null, (res) => {
       if (res.status === CODE.SUCCESS) {
         const { friends } = res.data;
-
-        setFriends((state) => {
-          const temp = [...state];
-          friends.forEach((friend) => {
-            const exist = temp.find((f) => f.id === friend.id);
-            if (!exist) temp.push(friend);
-          });
-          return temp;
-        });
+        setFriends(friends)
       }
     });
   };
@@ -68,16 +81,22 @@ const Friend = ({ socket, user }) => {
     }
   };
 
-  const onFriendMessage = (data) => {
-    !isOpen.current && setBadge(true);
-    setFriends((state) => {
-      const temp = [...state];
-      temp.map((friend) => {
-        if (friend.id === data.user.id) friend.last_message = data.message;
-        return friend;
+  const deleteFriend = (friend) => {
+    if (window.confirm(`${friend.nickname}님을 친구목록에서 삭제할까요?`)) {
+      // 삭제 요청
+      requestPost(URL.FRIEND_DELETE, { user_id: friend.id }, (res) => {
+        if (res.status === CODE.SUCCESS) {
+          setMenuId(null);
+          getFriends();
+          alert(`${friend.nickname}님을 친구목록에서 삭제했어요.`);
+        }
       });
-      return temp;
-    });
+    }
+  };
+
+  const onFriendMessage = (data) => {
+    if (!isOpen.current) setBadge(true);
+    setRecentMessage((state) => ({ ...state, [data.user.id]: data.message }));
   };
 
   useEffect(() => {
@@ -102,28 +121,16 @@ const Friend = ({ socket, user }) => {
     };
   }, [socket]);
 
+  useEffect(() => {
+    getFriends();
+    getFriendNotification();
+  }, [currentMenu]);
+
   return (
     <>
       {open && (
-        <div
-          style={{
-            position: "absolute",
-            top: "50%",
-            left: "50%",
-            transform: "translate(-50%, -50%)",
-            padding: 16,
-            border: "2px solid #000",
-            backgroundColor: "#fff",
-            minWidth: 200,
-          }}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
+        <div className={style.friend}>
+          <div className={style.header}>
             <h2>
               {currentDialog ? (
                 <>
@@ -142,56 +149,164 @@ const Friend = ({ socket, user }) => {
               닫기
             </button>
           </div>
+          {!currentDialog && (
+            <div className={style.nav}>
+              <div
+                className={`${style.nav_item} ${
+                  currentMenu === Menu.LIST ? style.active : style.inactive
+                }`}
+                onClick={() => setCurrentMenu(Menu.LIST)}
+              >
+                친구 목록
+              </div>
+              <div
+                className={`${style.nav_item} ${
+                  currentMenu === Menu.REQUEST_RECEIVE
+                    ? style.active
+                    : style.inactive
+                }`}
+                onClick={() => setCurrentMenu(Menu.REQUEST_RECEIVE)}
+              >
+                받은 요청
+              </div>
+              <div
+                className={`${style.nav_item} ${
+                  currentMenu === Menu.REQUEST_SEND
+                    ? style.active
+                    : style.inactive
+                }`}
+                onClick={() => setCurrentMenu(Menu.REQUEST_SEND)}
+              >
+                보낸 요청
+              </div>
+              <div
+                className={`${style.nav_item} ${
+                  currentMenu === Menu.BLOCK ? style.active : style.inactive
+                }`}
+                onClick={() => setCurrentMenu(Menu.BLOCK)}
+              >
+                차단 목록
+              </div>
+            </div>
+          )}
 
           {currentDialog ? (
             <FriendChat socket={socket} friend={currentDialog} user={user} />
           ) : (
-            <div>
-              <div>받은 요청</div>
-              <ul>
-                {notifications.length > 0 &&
-                  notifications
-                    .filter(
-                      (noti) =>
-                        noti.receiver_id === user.id &&
-                        noti.type === CODE.FRIEND_PENDING
-                    )
-                    .map((noti, index) => {
+            <div className={style.list_wrapper}>
+              {currentMenu === Menu.LIST && (
+                <ul>
+                  {friendList.length > 0 ? (
+                    friendList.map((friend, index) => (
+                      <li
+                        key={`friend_${index}`}
+                        className={style.list_item}
+                        onClick={() => {
+                          setCurrentDialog(friend);
+                          setRecentMessage((state) => {
+                            const temp = { ...state };
+                            delete temp[friend.id];
+                            return temp;
+                          });
+                        }}
+                      >
+                        <span>{friend.nickname}</span>
+                        <span className={style.message_preview}>
+                          {recentMessage[friend.id] && (
+                            <div
+                              style={{
+                                whiteSpace: "nowrap",
+                                textOverflow: "ellipsis",
+                                overflow: "hidden",
+                              }}
+                            >
+                              {recentMessage[friend.id]}
+                            </div>
+                          )}
+                        </span>
+                        {menuId === friend.id ? (
+                          <div style={{ display: "flex", gap: 8 }}>
+                            <button
+                              className={style.btn_red}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                deleteFriend(friend);
+                              }}
+                            >
+                              삭제
+                            </button>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setMenuId(null);
+                              }}
+                            >
+                              닫기
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setMenuId(friend.id);
+                            }}
+                          >
+                            :
+                          </button>
+                        )}
+                      </li>
+                    ))
+                  ) : (
+                    <>친구가 없어요..</>
+                  )}
+                </ul>
+              )}
+              {currentMenu === Menu.REQUEST_RECEIVE && (
+                <ul>
+                  {receiveRequests.length > 0 &&
+                    receiveRequests.map((noti, index) => {
                       const content = JSON.parse(noti.content);
                       const user = content.user;
                       return (
-                        <div key={`noti_received_${index}`}>
+                        <div
+                          key={`noti_received_${index}`}
+                          className={style.list_item}
+                        >
                           <div>{user.nickname}님이 친구요청을 보냈습니다.</div>
-                          <div>
-                            <button onClick={() => acceptFriend(user.id)}>
+                          <div className={style.buttons}>
+                            <button
+                              onClick={() => acceptFriend(user.id)}
+                              className={style.btn_green}
+                            >
                               수락
                             </button>
-                            <button onClick={() => refuseFriend(user.id)}>
+                            <button
+                              onClick={() => refuseFriend(user.id)}
+                              className={style.btn_red}
+                            >
                               거절
                             </button>
                           </div>
                         </div>
                       );
                     })}
-              </ul>
-              <hr />
-              <div>보낸 요청</div>
-              <ul>
-                {notifications.length > 0 &&
-                  notifications
-                    .filter(
-                      (noti) =>
-                        noti.sender_id === user.id &&
-                        noti.type === CODE.FRIEND_PENDING
-                    )
-                    .map((noti, index) => {
+                </ul>
+              )}
+              {currentMenu === Menu.REQUEST_SEND && (
+                <div>
+                  {sendRequests.length > 0 &&
+                    sendRequests.map((noti, index) => {
                       const content = JSON.parse(noti.content);
                       const user = content.user;
                       return (
-                        <div key={`noti_received_${index}`}>
+                        <div
+                          key={`noti_received_${index}`}
+                          className={style.list_item}
+                        >
                           <div>{user.nickname}</div>
                           <div>
                             <button
+                              className={style.btn_red}
                               onClick={() =>
                                 cancelRequestFriend(noti.receiver_id)
                               }
@@ -202,57 +317,14 @@ const Friend = ({ socket, user }) => {
                         </div>
                       );
                     })}
-              </ul>
-              <hr />
-              <div>차단 목록</div>
-              <hr />
-              <div>친구 목록</div>
-              <ul>
-                {friends.length > 0 ? (
-                  friends.map((friend, index) => (
-                    <li key={`friend_${index}`}>
-                      <div
-                        style={{
-                          display: "flex",
-                          justifyContent: "space-between",
-                          alignItems: "center",
-                          marginBottom: 8,
-                        }}
-                      >
-                        <span>{friend.nickname}</span>
-                        <div>
-                          <button onClick={() => setCurrentDialog(friend)}>
-                            채팅
-                          </button>
-                          <button>:</button>
-                        </div>
-                      </div>
-                      {friend.last_message && (
-                        <div
-                          style={{
-                            whiteSpace: "nowrap",
-                            textOverflow: "ellipsis",
-                            overflow: "hidden",
-                          }}
-                        >
-                          {friend.last_message}
-                        </div>
-                      )}
-                    </li>
-                  ))
-                ) : (
-                  <div></div>
-                )}
-              </ul>
-              <hr />
+                </div>
+              )}
+              {currentMenu === Menu.BLOCK && <div></div>}
             </div>
           )}
         </div>
       )}
-      <button
-        style={{ position: "absolute", right: 20, bottom: 20, padding: 8 }}
-        onClick={() => setOpen(true)}
-      >
+      <button className={style.btn_friend} onClick={() => setOpen(true)}>
         {badge && (
           <div
             style={{
@@ -267,7 +339,7 @@ const Friend = ({ socket, user }) => {
             }}
           ></div>
         )}
-        Friend
+        친구
       </button>
     </>
   );

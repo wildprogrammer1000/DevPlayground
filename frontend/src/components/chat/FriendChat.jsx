@@ -13,7 +13,6 @@ const FriendChat = ({ socket, friend, user }) => {
     e.preventDefault();
     if (chatMessage.length === 0) return;
     if (!user) return alert("로그인이 필요해요");
-
     requestPost(
       URL.FRIEND_MESSAGE,
       { message: chatMessage, user_id: friend.id },

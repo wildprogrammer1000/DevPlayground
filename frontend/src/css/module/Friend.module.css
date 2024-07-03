@@ -1,0 +1,18 @@
+.btn_friend {position: absolute; right: 20px; bottom: 20px; padding: 8px;}
+.friend {position: absolute;right: 20px; bottom: 20px; z-index: 1; width: 500px; min-height: 400px; padding: 16px;border: 2px solid #000;background-color: #fff; }
+.friend .header { display: flex; justify-content: space-between; align-items: center; height: 40px; border-bottom: 2px solid #000;}
+.friend .nav {display:flex;  border-bottom: 2px solid #000;}
+.friend .nav .nav_item {flex: 1; padding: 8px 0; text-align: center; transition: 0.3s;}
+.friend .nav .nav_item.active { background-color: #ccc;}
+.friend .nav .nav_item.inactive {background-color: #fff; }
+.friend .list_wrapper { padding: 16px 0; }
+.friend .list_wrapper .list_item { display: flex; justify-content: space-between; align-items: center; gap: 8px; width: 100%; padding: 8px; border: 2px solid #000; }
+.friend .list_wrapper .list_item .message_preview {flex: 1; text-align: left; padding: 0 8px; overflow: hidden; white-space: ellipse;}
+.friend .list_wrapper .list_item .buttons { display: flex; gap: 8px; }
+
+.btn_green { padding: 4px 8px; background-color: rgb(64, 255, 64);}
+.btn_red { padding: 4px 8px; color: #fff; background-color: rgb(255, 64, 64);}
+
+@media (max-width: 500px) {
+  .friend{right: 0; bottom: 0; width: 100%; height: 100%;}
+}

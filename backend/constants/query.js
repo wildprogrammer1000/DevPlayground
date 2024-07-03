@@ -69,7 +69,7 @@ const QUERY = {
 
   // Friend
   FRIEND_GET: `
-  select u.nickname, u.id 
+  select u.nickname, f.state, u.id 
   from friends f
   left join (users u) on (f.user2_id = u.id)
   where f.user1_id=?
@@ -84,6 +84,7 @@ const QUERY = {
   (user1_id, user2_id, state) values (?, ?, ?)
   on duplicate key update state=?
   `,
+  FRIEND_DELETE: "delete from friends where (user1_id=? and user2_id=?) or (user1_id=? and user2_id=?)",
   FRIEND_CHECK:
     "select * from friends where (user1_id=? and user2_id=?) or (user1_id=? and user2_id=?)",
 
