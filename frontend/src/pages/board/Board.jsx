@@ -34,7 +34,7 @@ const Board = ({ user }) => {
 
   return (
     <div>
-      <h2>게시판</h2>
+      <h2>커뮤니티</h2>
       <label>
         <span>카테고리</span>
         <select

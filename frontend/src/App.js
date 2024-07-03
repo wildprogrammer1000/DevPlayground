@@ -20,6 +20,8 @@ import AdminManageWaiting from "./pages/admin/AdminManageWaiting";
 
 import "./css/base.css";
 import "./css/components.css";
+import "./css/responsive.css";
+
 import { requestGet } from "./api/fetch";
 import CODE from "./constants/code";
 console.log("ENV: " + process.env.NODE_ENV);

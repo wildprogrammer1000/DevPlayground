@@ -18,7 +18,7 @@ const URL = {
   ADMIN_APPROVE_USER: "/admin/approve_user",
   ADMIN_REJECT_USER: "/admin/reject_user",
 
-  // 게시판
+  // 커뮤니티
   BOARD: "/board",
   BOARD_CREATE: "/board/create",
   BOARD_DETAIL: "/board/detail",

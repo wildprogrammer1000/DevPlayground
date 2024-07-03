@@ -10,7 +10,7 @@
     {
       "src": "logo_temp_256.png",
       "type": "image/png",
-      "sizes": "256x256"
+      "sizes": "128x128"
     }
   ],
   "start_url": ".",

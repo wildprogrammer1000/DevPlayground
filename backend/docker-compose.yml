@@ -33,13 +33,11 @@ services:
     env_file: ".env"
     ports:
       - 80:80
-    volumes:
-      - maria:/app
     restart: always
     depends_on:
       redis:
         condition: service_started
-      maria:  
+      maria:
         condition: service_healthy
 volumes:
   maria:
