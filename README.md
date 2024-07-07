@@ -19,6 +19,11 @@
 // /frontend
 npm install
 ```
+### Docker 볼륨 생성
+
+```
+docker volume create maria
+```
 
 ### 환경변수 설정
 
