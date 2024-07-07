@@ -28,10 +28,10 @@ docker volume create maria
 ### 환경변수 설정
 
 #### FrontEnd
-.env.template -> .env로 이름 변경
+.env.template -> *복사 후 .env로 이름 변경
 
 #### BackEnd
-.env.template -> .env로 이름 변경
+.env.template -> *복사 후 .env로 이름 변경
 
 #### Google OAuth Key 설정
 참고 링크: https://support.google.com/workspacemigrate/answer/9222992?hl=ko
