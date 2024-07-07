@@ -14,7 +14,6 @@ const Mypage = () => {
   const getPosts = async () => {
     requestGet(URL.MYPAGE_GET, null, (res) => {
       if (res.status === CODE.SUCCESS) { // Assuming 200 is the success code, check what CODE.SUCCESS is in your context
-        console.log('데이터: ', res.data);
         setMydata({
           mydata: res.data.mydata[0],
           board: res.data.board[0],

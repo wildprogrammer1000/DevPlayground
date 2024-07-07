@@ -6,7 +6,6 @@ const getMypage = async (req, res) => {
   let conn;
   try {
     const userInfo = req.userInfo;
-    console.log('userinfo: ', userInfo);
     conn = await pool.getConnection();
     const rows_1 = await conn.query(QUERY.MYPAGE_GET, [userInfo.id]);
     const rows_2 = await conn.query(QUERY.MYPAGE_GET_BOARD, [userInfo.id]);
