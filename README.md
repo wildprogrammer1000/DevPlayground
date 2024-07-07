@@ -16,7 +16,7 @@
 ###  패키지 설치
 
 ```
-// /frontend, /backend
+// /frontend
 npm install
 ```
 
@@ -39,19 +39,12 @@ npm install
 npm start
 ```
 
-#### BackEnd 실행
-```
-// /backend
-npm start
-```
-
-
-#### Database 실행
+#### BackEnd, Database 실행
 ```
 // /backend
 ./start.cmd // For Windows
-
 ./start.sh // For Mac
+
 
 // Permission 에러 발생시
 chmod +x start.sh
