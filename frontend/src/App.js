@@ -5,6 +5,7 @@ import "./utils/firebase";
 
 import Footer from "./components/Footer";
 import Header from "./components/Header";
+import Friend from "./components/friend/Friend";
 import Main from "./pages/Main";
 import URL from "./constants/url";
 import Login from "./pages/login/Login";
@@ -19,10 +20,12 @@ import AdminManageWaiting from "./pages/admin/AdminManageWaiting";
 
 import "./css/base.css";
 import "./css/components.css";
-import Friend from "./components/Friend";
-import Mypage from "./pages/mypage/Mypage";
-console.log("ENV: " + process.env.NODE_ENV)
+import "./css/responsive.css";
 
+import { requestGet } from "./api/fetch";
+import CODE from "./constants/code";
+import Mypage from "./pages/mypage/Mypage";
+console.log("ENV: " + process.env.NODE_ENV);
 function App() {
   const location = useLocation();
 
@@ -45,6 +48,12 @@ function App() {
     if (!socket) return;
   }, [socket]);
 
+  useEffect(() => {
+    requestGet(URL.REFRESH_SESSION, null, (res) => {
+      if (res.status === CODE.SUCCESS && res.data) setUser(res.data);
+    });
+  }, [location]);
+
   return location.pathname.includes(URL.ADMIN) ? (
     <Routes>
       <Route path={URL.ADMIN} element={<Admin />} />
@@ -62,7 +71,7 @@ function App() {
           <Route path={URL.LOGIN} element={<Login setUser={setUser} />} />
           <Route path={URL.REGISTER} element={<Register setUser={setUser} />} />
 
-          <Route path={URL.BOARD} element={<Board />} />
+          <Route path={URL.BOARD} element={<Board user={user} />} />
           <Route
             path={URL.BOARD_CREATE}
             element={<BoardCreate user={user} />}
@@ -71,7 +80,7 @@ function App() {
             path={URL.BOARD_DETAIL}
             element={<BoardDetail user={user} />}
           />
-          <Route path={URL.BOARD_EDIT} element={<BoardEdit />} />
+          <Route path={URL.BOARD_EDIT} element={<BoardEdit user={user} />} />
           <Route path={URL.REGISTER_WAIT} element={<RegisterWait />} />
 
           <Route path={URL.MYPAGE_GET} element={<Mypage />}></Route>

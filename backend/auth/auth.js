@@ -9,10 +9,15 @@ const oAuth2Client = new OAuth2Client(
   process.env.GOOGLE_CLIENT_SECRET,
   "postmessage"
 );
-
+const logOut = (req, res) => {
+  req.session = null;
+  req.userInfo = null;
+  res.clearCookie("session");
+  res.sendStatus(CODE.SUCCESS);
+};
 const validateSession = (req, res, next) => {
   const { session } = req.cookies;
-  if (!session) return res.sendStatus(CODE.SESSION_EXPIRED);
+  if (!session) return res.send(null);
 
   req.session = JSON.parse(session);
   req.userInfo = JSON.parse(session).userInfo;
@@ -113,10 +118,8 @@ const registerUser = async (req, res) => {
       // 시스템 로그 추가
       await addSysLogCreateUser(
         "user_create",
-        { role, platform, email, nickname, tokens },
-        role,
-        rows[0].id,
-        nickname
+        { role, platform, email, nickname },
+        { id: rows[0].id, role, nickname }
       );
 
       tokens.platform = platform;
@@ -159,11 +162,25 @@ const verifyNickname = async (req, res) => {
   }
 };
 
+const refreshSession = (req, res) => {
+  const { session } = req.cookies;
+  if (!session) return res.send(null);
+
+  req.session = JSON.parse(session);
+  req.userInfo = JSON.parse(session).userInfo;
+  // 플랫폼별 처리 ( 현재는 구글만 )
+  const expired = req.session.tokens.expiry_date < Date.now();
+  if (expired) return res.sendStatus(CODE.SESSION_EXPIRED);
+  res.json(req.userInfo);
+};
+
 module.exports = {
+  logOut,
   validateSession,
   getGoogleUser,
   refreshGoogleSession,
   registerUser,
   deleteWaitingUser,
   verifyNickname,
+  refreshSession,
 };

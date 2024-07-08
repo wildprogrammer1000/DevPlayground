@@ -16,8 +16,13 @@
 ###  패키지 설치
 
 ```
-// /frontend, /backend
+// /frontend
 npm install
+```
+### Docker 볼륨 생성
+
+```
+docker volume create maria
 ```
 
 ### 환경변수 설정
@@ -39,19 +44,12 @@ npm install
 npm start
 ```
 
-#### BackEnd 실행
-```
-// /backend
-npm start
-```
-
-
-#### Database 실행
+#### BackEnd, Database 실행
 ```
 // /backend
 ./start.cmd // For Windows
-
 ./start.sh // For Mac
+
 
 // Permission 에러 발생시
 chmod +x start.sh

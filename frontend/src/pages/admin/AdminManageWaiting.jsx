@@ -10,7 +10,6 @@ const AdminManageWaiting = () => {
       URL.ADMIN_GET_WATIING_USERS,
       null,
       (res) => {
-        console.log("response: ", res);
         if (res.status === CODE.SUCCESS) {
           const { waiting_users } = res.data;
           setWaitingUsers(waiting_users);

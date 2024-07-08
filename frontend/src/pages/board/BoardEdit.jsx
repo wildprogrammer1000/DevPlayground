@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { getSessionItem } from "../../utils/storage";
 import { requestPost } from "../../api/fetch";
 import { CATEGORY } from "../../constants/constants";
 import URL from "../../constants/url";
-const BoardEdit = () => {
+const BoardEdit = ({user}) => {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -18,12 +17,8 @@ const BoardEdit = () => {
   };
   const handleSubmit = (e) => {
     e.preventDefault();
-    const session = getSessionItem("userTokens");
-    if (!session) {
-      alert("로그인이 필요합니다.");
-      return;
-    }
-    requestPost(URL.BOARD_EDIT, { ...post, ...session }, handleResponse);
+    if (!user) return alert("로그인이 필요합니다.");
+    requestPost(URL.BOARD_EDIT, { ...post }, handleResponse);
   };
 
   useEffect(() => {

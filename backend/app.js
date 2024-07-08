@@ -1,6 +1,6 @@
 require("dotenv").config();
-const { addToken, subscribeTopic } = require("./utils/fcm");
-const { socketio, onConnection } = require("./utils/socketio");
+const { subscribeTopic } = require("./utils/fcm");
+const { setSocketIO, onConnection } = require("./utils/socketio");
 const { redis } = require("./utils/redis");
 const cookieParser = require("cookie-parser");
 const express = require("express");
@@ -13,7 +13,10 @@ const {
   requestFriend,
   cancelFriend,
   acceptFriend,
+  deleteFriend,
   refuseFriend,
+  getFriendMessages,
+  sendFriendMessage,
 } = require("./friend");
 const { getNotifications } = require("./notification");
 
@@ -23,16 +26,18 @@ const io = new Server(httpServer, {
   cors: [process.env.CLIENT_HOST1, process.env.CLIENT_HOST2],
 });
 redis.io = io;
-socketio.io = io;
+setSocketIO(io);
 io.on("connection", onConnection);
 
 const {
+  logOut,
   validateSession,
   getGoogleUser,
   refreshGoogleSession,
   registerUser,
   deleteWaitingUser,
   verifyNickname,
+  refreshSession,
 } = require("./auth/auth");
 const {
   getBoard,
@@ -65,6 +70,8 @@ app.use(express.urlencoded({ extended: false }));
 // Login
 app.get(URL.LOGIN_GOOGLE, getGoogleUser);
 app.post(URL.REFRESH_TOKEN_GOOGLE, refreshGoogleSession);
+app.get(URL.REFRESH_SESSION, refreshSession);
+app.get(URL.LOGOUT, logOut);
 
 // Register
 app.get(URL.VERIFY_NICKNAME, verifyNickname);
@@ -93,7 +100,10 @@ app.get(URL.FRIEND_GET, validateSession, getFriend);
 app.post(URL.FRIEND_REQUEST, validateSession, requestFriend);
 app.post(URL.FRIEND_CANCEL, validateSession, cancelFriend);
 app.post(URL.FRIEND_ACCEPT, validateSession, acceptFriend);
+app.post(URL.FRIEND_DELETE, validateSession, deleteFriend);
 app.post(URL.FRIEND_REFUSE, validateSession, refuseFriend);
+app.get(URL.FRIEND_MESSAGE, validateSession, getFriendMessages);
+app.post(URL.FRIEND_MESSAGE, validateSession, sendFriendMessage);
 
 // Notification
 app.get(URL.NOTIFICATION_GET, validateSession, getNotifications);

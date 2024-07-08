@@ -86,6 +86,17 @@ const QUERY = {
   NOTIFICATION_GET_BY_TYPE: `select * from notifications where (receiver_id=? or sender_id=?) and type=?`,
   NOTIFICATION_DELETE: `delete from notifications where type=? and sender_id=? and receiver_id=?`,
 
+  // Message
+  MESSAGE_GET: `
+  select u.nickname, m.sender_id as id, m.content, m.create_time
+  from messages m
+  left join (users u) on (m.sender_id = u.id)
+  where m.sender_id=? and m.receiver_id=?
+  limit 100
+  `,
+  MESSAGE_SEND:
+    "insert into messages (sender_id, receiver_id, content) values (?, ?, ?)",
+    
   // Mypage
   MYPAGE_GET: `select * from users where id = ?`,
   MYPAGE_GET_BOARD: `select count(*) as count from board where user_id = ?`,

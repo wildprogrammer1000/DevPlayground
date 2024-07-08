@@ -8,6 +8,7 @@
   max-width: 1200px;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 .app_container .app_content {
   flex: 1;
@@ -18,13 +19,32 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 60px;
+  height: 80px;
+  gap: 8px;
   padding: 16px;
   border-bottom: 1px solid #ccc;
   margin-bottom: 16px;
+}
+.header .menu {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: space-between;
+}
+.header .menu .btn_close {
+  display: none;
+}
+.header .menu_mobile {
+  display: none;
 }
 
 .footer {
   height: 80px;
   padding: 16px;
 }
+
+/* Chat */
+.chat .form {height:40px;}
+.chat .form input {height: 100%; padding: 0 8px;}
+.chat .form button{height: 100%;}
+
