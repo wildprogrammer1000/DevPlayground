@@ -12,3 +12,6 @@
 
 # Deploy
 deploy.sh
+
+# Credentials
+.git-credentials
