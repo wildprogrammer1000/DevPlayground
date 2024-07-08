@@ -20,7 +20,8 @@ services:
           "-p$MARIADB_PASSWORD",
         ]
       timeout: 1s
-      retries: 10
+      interval: 1s
+      retries: 3
   redis:
     container_name: redis
     image: redis:latest
