@@ -9,3 +9,6 @@
 /backend/.env
 /backend/node_modules
 /backend/utils/fcm_account.json
+
+# Deploy
+deploy.sh

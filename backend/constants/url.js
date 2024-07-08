@@ -38,6 +38,9 @@ const URL = {
 
   // 알림
   NOTIFICATION_GET: "/notification",
+
+  // 마이페이지
+  MYPAGE_GET: "/mypage",
 };
 
 module.exports = { URL };

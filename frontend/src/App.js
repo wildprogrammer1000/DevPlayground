@@ -24,6 +24,7 @@ import "./css/responsive.css";
 
 import { requestGet } from "./api/fetch";
 import CODE from "./constants/code";
+import Mypage from "./pages/mypage/Mypage";
 console.log("ENV: " + process.env.NODE_ENV);
 function App() {
   const location = useLocation();
@@ -81,6 +82,8 @@ function App() {
           />
           <Route path={URL.BOARD_EDIT} element={<BoardEdit user={user} />} />
           <Route path={URL.REGISTER_WAIT} element={<RegisterWait />} />
+
+          <Route path={URL.MYPAGE_GET} element={<Mypage />}></Route>
         </Routes>
         {user && <Friend socket={socket} user={user} />}
       </div>

@@ -104,6 +104,16 @@ const QUERY = {
   `,
   MESSAGE_SEND:
     "insert into messages (sender_id, receiver_id, content) values (?, ?, ?)",
+    
+  // Mypage
+  MYPAGE_GET: `select * from users where id = ?`,
+  MYPAGE_GET_BOARD: `select count(*) as count from board where user_id = ?`,
+  MYPAGE_GET_COMMENT: `select count(*) as count from comment where user_id = ?`,
+  MYPAGE_GET_ACTIVETIME: `
+  select nickname, create_time, datediff(current_date, create_time) + 1 as active_time
+  from users where id = ?
+  `, // 가입 당일이 0 이어서 + 1 추가
+  MYPAGE_DELETE_USER: `delete from users where id = ?`,
 };
 
 module.exports = { QUERY };
