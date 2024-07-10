@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { requestGet } from "../../api/fetch";
 import { useNavigate } from "react-router-dom";
+import { requestGet } from "../../api/fetch";
 import { CATEGORY } from "../../constants/constants";
 import URL from "../../constants/url";
 
@@ -26,6 +26,21 @@ const Board = ({ user }) => {
   const createPost = () => {
     if (!user) return alert("로그인이 필요합니다.");
     navigate(URL.BOARD_CREATE);
+  };
+
+  const calculatePostTime = (time) => {
+    const now = new Date();
+    const nowKST = new Date(now.getTime() + 9 * 60 * 60 * 1000); // 9시간 추가
+    const postDate = new Date(time);
+    const postKST = new Date(postDate + 9 * 60 * 60 * 1000); // 기존 게시글에 9시간 추가
+
+    const timeDifference = nowKST - postKST;
+
+    const oneDay = 24 * 60 * 60 * 1000;
+    if(timeDifference < oneDay){
+      return 1;
+    } 
+    return 0;
   };
 
   useEffect(() => {
@@ -73,7 +88,9 @@ const Board = ({ user }) => {
                   }
                 >
                   <td>{CATEGORY[post.category]}</td>
-                  <td>{post.title}</td>
+                  <td>{`${calculatePostTime(post.create_time) ? "[N]" : ""} ${
+                    post.title
+                  }`}</td>
                   <td>
                     {post.content}
                     {`[${post.cmt_count}]`}
