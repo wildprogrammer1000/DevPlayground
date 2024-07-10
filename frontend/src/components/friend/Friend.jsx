@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { getNotificationByType } from "../Notification";
 import { requestGet, requestPost } from "../../api/fetch";
 import CODE from "../../constants/code";
 import URL from "../../constants/url";
-import FriendChat from "../chat/FriendChat";
 import style from "../../css/module/Friend.module.css";
+import FriendChat from "../chat/FriendChat";
+import { getNotificationByType } from "../Notification";
 
 const Menu = {
   LIST: 0,
