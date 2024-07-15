@@ -24,7 +24,7 @@ const Header = ({ user, setUser }) => {
     <header className="header">
       <Link
         to={URL.MAIN}
-        style={{ fontSize: 24, fontFamily: "Aggro B", letterSpacing: -0.5 }}
+        style={{ fontSize: 24, fontFamily: "NN Heavy", letterSpacing: -0.5 }}
       >
         PLAYGROUNDDEV
       </Link>

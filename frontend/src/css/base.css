@@ -1,18 +1,26 @@
 @font-face {
-  font-family: "Aggro L";
-  src: url(./fonts/Aggro_L.ttf);
+  font-family: "NN Light";
+  src: url(fonts/NanumSquareNeo-aLt.ttf);
 }
 @font-face {
-  font-family: "Aggro M";
-  src: url(./fonts/Aggro_M.ttf);
+  font-family: "NN Regular";
+  src: url(fonts/NanumSquareNeo-bRg.ttf);
 }
 @font-face {
-  font-family: "Aggro B";
-  src: url(./fonts/Aggro_B.ttf);
+  font-family: "NN Bold";
+  src: url(fonts/NanumSquareNeo-cBd.ttf);
+}
+@font-face {
+  font-family: "NN Extra Bold";
+  src: url(fonts/NanumSquareNeo-dEb.ttf);
+}
+@font-face {
+  font-family: "NN Heavy";
+  src: url(fonts/NanumSquareNeo-eHv.ttf);
 }
 * {
   box-sizing: border-box;
-  font-family: "Aggro M";
+  font-family: "NN Bold";
   color: #000;
 }
 body {
