@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import dayjs from "dayjs";
+
 import { requestDelete, requestGet, requestPost } from "../../api/fetch";
 import URL from "../../constants/url";
 import CODE from "../../constants/code";
@@ -22,7 +24,9 @@ const BoardDetail = ({ user }) => {
     const post_id = location.state.post_id;
     requestGet(URL.BOARD_DETAIL, { post_id }, (res) => {
       if (res.status === CODE.SUCCESS) {
-        setPost(res.data);
+        const post = res.data;
+        post.content = post.content.replaceAll("\n", "</br>");
+        setPost(post);
         getComment();
         getLikes();
       }
@@ -113,6 +117,7 @@ const BoardDetail = ({ user }) => {
   useEffect(() => {
     getPost();
   }, []);
+
   return (
     <div>
       <h2>게시글</h2>
@@ -121,12 +126,12 @@ const BoardDetail = ({ user }) => {
         {post ? (
           <div
             style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 8,
               marginBottom: 16,
             }}
           >
+            <div style={{ fontSize: 12, textAlign: "right", color: "#333" }}>
+              {dayjs(post.create_time).format("YYYY-MM-DD HH:mm")}
+            </div>
             <div
               style={{
                 display: "flex",
@@ -135,15 +140,15 @@ const BoardDetail = ({ user }) => {
                 padding: 8,
               }}
             >
-              <div>{post.title}</div>
-              <div style={{ display: "flex", gap: 8 }}>
-                <div>{post.create_time}</div>
-                <div>{post.nickname}</div>
-              </div>
+              <div>제목: {post.title}</div>
             </div>
-            <div style={{ border: "2px solid #ccc", padding: 8 }}>
-              {post.content}
+            <div style={{ display: "flex", gap: 8, padding: 8 }}>
+              작성자: {post.nickname}
             </div>
+            <div
+              style={{ padding: 8, border: "2px solid #000" }}
+              dangerouslySetInnerHTML={{ __html: post.content }}
+            />
           </div>
         ) : (
           <div>게시글 가져오는 중...</div>
@@ -199,7 +204,8 @@ const BoardDetail = ({ user }) => {
                 >
                   <div>
                     <div>
-                      {comment.nickname} / {comment.create_time}
+                      {comment.nickname} /
+                      {dayjs(comment.create_time).format("YYYY-MM-DD HH:mm")}
                     </div>
                     <div>{comment.content}</div>
                   </div>
