@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 import { io } from "socket.io-client";
+import toast, { Toaster } from "react-hot-toast";
 import "./utils/firebase";
 
 import Footer from "./components/Footer";
@@ -18,6 +19,7 @@ import Login from "./pages/login/Login";
 import Register from "./pages/login/Register";
 import RegisterWait from "./pages/login/RegisterWait";
 import PwaModule from "./components/PwaObserver";
+import Assistant from "components/Assistant";
 
 import "./css/base.css";
 import "./css/components.css";
@@ -94,6 +96,8 @@ function App() {
 
       <Footer />
 
+      <Assistant />
+      {/* <Toaster position="top-center" /> */}
       {/* {PwaObserver} */}
     </div>
   );
