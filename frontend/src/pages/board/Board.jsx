@@ -4,7 +4,7 @@ import { requestGet } from "../../api/fetch";
 import { CATEGORY } from "../../constants/constants";
 import URL from "../../constants/url";
 
-const columns = ["카테고리", "제목", "내용", "작성자"];
+const columns = ["카테고리", "제목", "작성자"];
 
 const Board = ({ user }) => {
   const navigate = useNavigate();
@@ -37,9 +37,7 @@ const Board = ({ user }) => {
     const timeDifference = nowKST - postKST;
 
     const oneDay = 24 * 60 * 60 * 1000;
-    if(timeDifference < oneDay){
-      return 1;
-    } 
+    if (timeDifference < oneDay) return 1;
     return 0;
   };
 
@@ -88,11 +86,9 @@ const Board = ({ user }) => {
                   }
                 >
                   <td>{CATEGORY[post.category]}</td>
-                  <td>{`${calculatePostTime(post.create_time) ? "[N]" : ""} ${
-                    post.title
-                  }`}</td>
                   <td>
-                    {post.content}
+                    {post.title}
+                    {calculatePostTime(post.create_time) && "[N]"}
                     {`[${post.cmt_count}]`}
                   </td>
                   <td>{post.nickname}</td>

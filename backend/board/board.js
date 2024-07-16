@@ -109,9 +109,9 @@ const editPost = async (req, res) => {
   let conn;
   try {
     conn = await pool.getConnection();
-    const { id, title, content } = req.body;
+    const { id, category, title, content } = req.body;
 
-    await conn.query(QUERY.BOARD_EDIT, [title, content, id]);
+    await conn.query(QUERY.BOARD_EDIT, [category, title, content, id]);
 
     res.sendStatus(CODE.SUCCESS);
   } catch (err) {

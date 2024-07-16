@@ -3,11 +3,11 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { requestPost } from "../../api/fetch";
 import { CATEGORY } from "../../constants/constants";
 import URL from "../../constants/url";
-const BoardEdit = ({user}) => {
+const BoardEdit = ({ user }) => {
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [post, setPost] = useState({ title: "", content: "", category: 0 });
+  const [post, setPost] = useState({ title: "", content: "", category: "0" });
   const handleResponse = (res) => {
     switch (res.status) {
       default:
@@ -62,9 +62,10 @@ const BoardEdit = ({user}) => {
                 category: Number(e.target.value),
               }))
             }
+            value={post.category}
           >
             {Object.keys(CATEGORY).map((category) => (
-              <option value={category} key={CATEGORY[category]}>
+              <option value={String(category)} key={CATEGORY[category]}>
                 {CATEGORY[category]}
               </option>
             ))}

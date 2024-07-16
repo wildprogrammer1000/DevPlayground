@@ -38,7 +38,7 @@ const QUERY = {
     where b.id=?`,
   BOARD_DELETE: "delete from board where id=?",
   BOARD_EDIT:
-    "update board set title=?, content=?, update_time=current_timestamp() where id=?",
+    "update board set category=?, title=?, content=?, update_time=current_timestamp() where id=?",
 
   BOARD_CATEGORY: `select u.nickname, Count(c.id) as cmt_count, b.id, b.user_id, b.title, b.content, b.category, b.create_time
     from board b 
