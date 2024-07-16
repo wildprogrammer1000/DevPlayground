@@ -17,6 +17,7 @@ import BoardEdit from "./pages/board/BoardEdit";
 import Login from "./pages/login/Login";
 import Register from "./pages/login/Register";
 import RegisterWait from "./pages/login/RegisterWait";
+import PwaModule from "./components/PwaObserver";
 
 import "./css/base.css";
 import "./css/components.css";
@@ -25,9 +26,12 @@ import "./css/responsive.css";
 import { requestGet } from "./api/fetch";
 import CODE from "./constants/code";
 import Mypage from "./pages/mypage/Mypage";
+
 console.log("ENV: " + process.env.NODE_ENV);
 function App() {
   const location = useLocation();
+
+  const { PwaObserver, enabled } = PwaModule();
 
   const [user, setUser] = useState();
   const [socket, setSocket] = useState();
@@ -89,6 +93,8 @@ function App() {
       </div>
 
       <Footer />
+
+      {/* {PwaObserver} */}
     </div>
   );
 }

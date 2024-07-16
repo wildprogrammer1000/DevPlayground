@@ -1,0 +1,36 @@
+.pwa {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 500px;
+  padding: 16px;
+
+  border-radius: 20px 20px 0 0;
+  border: 2px solid #000;
+  animation: moveUp 1.5s;
+}
+
+.pwa .buttons {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.pwa .title {
+  margin-bottom: 12px;
+}
+.pwa .buttons button {
+  flex: 1;
+  height: 40px;
+}
+
+@keyframes moveUp {
+  0% {
+    bottom: -100%;
+  }
+  100% {
+    bottom: 0;
+  }
+}
