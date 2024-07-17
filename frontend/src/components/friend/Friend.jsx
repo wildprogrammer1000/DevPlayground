@@ -39,7 +39,7 @@ const Friend = ({ socket, user }) => {
     getNotificationByType(CODE.NOTIFICATION_FRIEND, (res) => {
       if (res.status === CODE.SUCCESS) {
         const { notifications } = res.data;
-        setNotifications(notifications);
+        setNotifications(notifications ? notifications : []);
       }
     });
   };
@@ -47,7 +47,7 @@ const Friend = ({ socket, user }) => {
     requestGet(URL.FRIEND_GET, null, (res) => {
       if (res.status === CODE.SUCCESS) {
         const { friends } = res.data;
-        setFriends(friends)
+        setFriends(friends ? friends : []);
       }
     });
   };

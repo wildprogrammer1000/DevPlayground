@@ -18,7 +18,7 @@ import BoardEdit from "./pages/board/BoardEdit";
 import Login from "./pages/login/Login";
 import Register from "./pages/login/Register";
 import RegisterWait from "./pages/login/RegisterWait";
-import PwaModule from "./components/PwaObserver";
+import PwaModule from "./components/pwa/PwaObserver";
 import Assistant from "components/Assistant";
 
 import "./css/base.css";
@@ -96,7 +96,7 @@ function App() {
 
       <Footer />
 
-      <Assistant />
+      {/* <Assistant /> */}
       {/* <Toaster position="top-center" /> */}
       {/* {PwaObserver} */}
     </div>

@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { getCoords } from "utils/fn";
 
 const size = { x: 50, y: 50 };
 const Assistant = () => {
@@ -37,12 +38,6 @@ const Assistant = () => {
     isDragging.current = false;
     isMoved.current = false;
     assistRef.current.style.transition = "0.3s";
-  };
-
-  const getCoords = (e) => {
-    const x = e.touches ? e.touches[0].clientX : e.clientX;
-    const y = e.touches ? e.touches[0].clientY : e.clientY;
-    return { x, y };
   };
 
   useEffect(() => {
