@@ -23,11 +23,13 @@ import Assistant from "components/Assistant";
 
 import "./css/base.css";
 import "./css/components.css";
-import "./css/responsive.css";
 
 import { requestGet } from "./api/fetch";
 import CODE from "./constants/code";
 import Mypage from "./pages/mypage/Mypage";
+import Gallery from "pages/gallery/Gallery";
+import GalleryCreate from "pages/gallery/GalleryCreate";
+import GalleryPiece from "pages/gallery/GalleryPiece";
 
 console.log("ENV: " + process.env.NODE_ENV);
 function App() {
@@ -89,14 +91,18 @@ function App() {
           <Route path={URL.BOARD_EDIT} element={<BoardEdit user={user} />} />
           <Route path={URL.REGISTER_WAIT} element={<RegisterWait />} />
 
-          <Route path={URL.MYPAGE_GET} element={<Mypage />}></Route>
+          <Route path={URL.MYPAGE_GET} element={<Mypage />} />
+
+          <Route path={URL.GALLERY} element={<Gallery />} />
+          <Route path={URL.GALLERY_CREATE} element={<GalleryCreate />} />
+          <Route path={URL.GALLERY_PIECE} element={<GalleryPiece />} />
         </Routes>
-        {user && <Friend socket={socket} user={user} />}
+        {/* {user && <Friend socket={socket} user={user} />} */}
       </div>
 
       <Footer />
 
-      {/* <Assistant /> */}
+      <Assistant />
       {/* <Toaster position="top-center" /> */}
       {/* {PwaObserver} */}
     </div>

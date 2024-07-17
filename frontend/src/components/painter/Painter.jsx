@@ -1,13 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { getCoords } from "utils/fn";
+import style from "css/module/Painter.module.css";
 
 const Tool = {
   BRUSH: 0,
   ERASER: 1,
 };
-const Painter = () => {
+const Painter = ({ canvas }) => {
   const container = useRef();
-  const canvas = useRef();
   const cursor = useRef();
   const isDrawing = useRef(false);
   const ctx = useRef();
@@ -61,6 +61,10 @@ const Painter = () => {
     setHideCursor(true);
   };
 
+  const clearCanvas = () => {
+    ctx.current.clearRect(0, 0, canvas.current.width, canvas.current.height);
+  };
+
   useEffect(() => {
     canvas.current.width = canvas.current.clientWidth;
     canvas.current.height = canvas.current.clientHeight;
@@ -91,7 +95,16 @@ const Painter = () => {
   }, [tool]);
 
   return (
-    <div ref={container} style={{ position: "relative", userSelect: "none" }}>
+    <div
+      ref={container}
+      style={{
+        position: "relative",
+        userSelect: "none",
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+      }}
+    >
       <canvas
         ref={canvas}
         onMouseDown={handleDown}
@@ -99,44 +112,51 @@ const Painter = () => {
         onMouseUp={handleUp}
         onMouseEnter={handleEnter}
         onMouseOut={handleOut}
-        style={{ width: "100%", height: 500, border: "1px solid #000" }}
+        style={{ width: "100%", border: "1px solid #000", flex: 1 }}
       ></canvas>
-      <div>
-        <input
-          type="color"
-          value={config.color}
-          onChange={(e) =>
-            setConfig((state) => ({ ...state, color: e.target.value }))
-          }
-        />
-        <input
-          type="range"
-          min={1}
-          max={50}
-          step={0.5}
-          value={config.size}
-          onChange={(e) =>
-            setConfig((state) => ({ ...state, size: Number(e.target.value) }))
-          }
-        />
-        <button
-          onClick={() => setTool(Tool.BRUSH)}
-          style={{
-            border:
-              tool === Tool.BRUSH ? "2px solid red" : "2px solid transparent",
-          }}
-        >
-          브러쉬
-        </button>
-        <button
-          onClick={() => setTool(Tool.ERASER)}
-          style={{
-            border:
-              tool === Tool.ERASER ? "2px solid red" : "2px solid transparent",
-          }}
-        >
-          지우개
-        </button>
+      <div className={style.tools}>
+        <div>
+          <button
+            onClick={() => setTool(Tool.BRUSH)}
+            style={{
+              border:
+                tool === Tool.BRUSH ? "2px solid red" : "2px solid transparent",
+            }}
+          >
+            브러쉬
+          </button>
+          <button
+            onClick={() => setTool(Tool.ERASER)}
+            style={{
+              border:
+                tool === Tool.ERASER
+                  ? "2px solid red"
+                  : "2px solid transparent",
+            }}
+          >
+            지우개
+          </button>
+        </div>
+        <div className={style.right}>
+          <input
+            type="color"
+            value={config.color}
+            onChange={(e) =>
+              setConfig((state) => ({ ...state, color: e.target.value }))
+            }
+          />
+          <input
+            type="range"
+            min={1}
+            max={50}
+            step={0.5}
+            value={config.size}
+            onChange={(e) =>
+              setConfig((state) => ({ ...state, size: Number(e.target.value) }))
+            }
+          />
+          <button onClick={clearCanvas}>초기화</button>
+        </div>
       </div>
       <div
         ref={cursor}

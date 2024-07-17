@@ -14,29 +14,6 @@
   padding: 16px;
 }
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  height: 80px;
-  gap: 8px;
-  padding: 16px;
-  border-bottom: 1px solid #ccc;
-  margin-bottom: 16px;
-}
-.header .menu {
-  display: flex;
-  flex: 1;
-  align-items: center;
-  justify-content: space-between;
-}
-.header .menu .btn_close {
-  display: none;
-}
-.header .menu_mobile {
-  display: none;
-}
-
 .footer {
   height: 80px;
   padding: 16px;

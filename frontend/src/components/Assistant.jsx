@@ -1,7 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+import User from "pages/user/User";
+import { useContext, useEffect, useRef, useState } from "react";
+import { Context } from "utils/context";
 import { getCoords } from "utils/fn";
 
 const size = { x: 50, y: 50 };
+const Menu = {
+  NOTICE: 0,
+  TALK: 1,
+  USER: 2,
+};
 const Assistant = () => {
   const isDragging = useRef(false);
   const isMoved = useRef(false);
@@ -11,7 +18,13 @@ const Assistant = () => {
     y: window.innerHeight / 2,
   });
   const [open, setOpen] = useState(false);
-  const [menu, setMenu] = useState(0);
+  const [menu, setMenu] = useState(Menu.NOTICE);
+
+  const components = {
+    // [Menu.NOTICE]: </>,
+    // [Menu.TALK]: </>,
+    [Menu.USER]: <User />,
+  };
 
   const handleMouseDown = () => {
     isDragging.current = true;
@@ -56,14 +69,15 @@ const Assistant = () => {
       <div
         style={{
           position: "fixed",
-          top: 0,
-          left: 0,
-          transform: `translateX(${open ? 0 : -100}%)`,
+          bottom: 0,
+          left: "50%",
+          transform: `translate(-50%, ${open ? 0 : 100}%)`,
+          zIndex: 1,
           display: "flex",
           flexDirection: "column",
           width: "100%",
           maxWidth: 500,
-          height: "100%",
+          height: "60%",
           backgroundColor: "#fff",
           border: "2px solid #000",
           transition: "0.3s",
@@ -71,17 +85,33 @@ const Assistant = () => {
       >
         <div
           style={{
+            position: "relative",
             display: "flex",
-            justifyContent: "space-between",
-            padding: 8,
+            justifyContent: "center",
+            padding: 16,
             fontSize: 20,
             borderBottom: "2px solid #000",
           }}
         >
-          <div> 무엇을 도와드릴까요?</div>
-          <button onClick={() => setOpen(false)}>닫기</button>
+          <div
+            style={{
+              fontSize: 24,
+              fontFamily: "NN Heavy",
+              letterSpacing: -0.5,
+            }}
+          >
+            PLAYGROUNDDEV
+          </div>
+          <button
+            style={{ position: "absolute", top: 16, right: 16 }}
+            onClick={() => setOpen(false)}
+          >
+            닫기
+          </button>
         </div>
-        <div style={{ flex: 1, borderBottom: "2px solid #000" }}>{menu}</div>
+        <div style={{ flex: 1, borderBottom: "2px solid #000" }}>
+          {components[menu] && components[menu]}
+        </div>
         <div style={{ display: "flex", height: 60 }}>
           <button style={{ flex: 1 }} onClick={() => setMenu(0)}>
             공지사항
@@ -90,7 +120,7 @@ const Assistant = () => {
             1:1 상담
           </button>
           <button style={{ flex: 1 }} onClick={() => setMenu(2)}>
-            마이페이지
+            프로필
           </button>
         </div>
       </div>
@@ -104,7 +134,8 @@ const Assistant = () => {
           width: size.x,
           height: size.y,
           borderRadius: "50%",
-          backgroundColor: "red",
+          border: "2px solid #000",
+          backgroundColor: "#fff",
           transition: "0.3s",
         }}
         onMouseOver={() => {

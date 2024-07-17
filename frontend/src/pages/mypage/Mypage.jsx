@@ -1,9 +1,15 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import URL from "../../constants/url";
 import { requestGet } from "../../api/fetch";
 import CODE from "../../constants/code";
+import { useNavigate } from "react-router-dom";
+import { Context } from "utils/context";
 
 const Mypage = () => {
+  const navigate = useNavigate();
+  const context = useContext(Context);
+  const [_, setUser] = context.user;
+
   const [mydata, setMydata] = useState({
     mydata: [],
     board: [],
@@ -12,19 +18,35 @@ const Mypage = () => {
   });
 
   const getPosts = async () => {
-    requestGet(URL.MYPAGE_GET, null, (res) => {
-      if (res.status === CODE.SUCCESS) { // Assuming 200 is the success code, check what CODE.SUCCESS is in your context
-        setMydata({
-          mydata: res.data.mydata[0],
-          board: res.data.board[0],
-          comment: res.data.comment[0],
-          active: res.data.active[0],
-        });
-      } else {
-        console.error('Request failed with status: ', res.status);
+    requestGet(
+      URL.MYPAGE_GET,
+      null,
+      (res) => {
+        if (res.status === CODE.SUCCESS) {
+          // Assuming 200 is the success code, check what CODE.SUCCESS is in your context
+          setMydata({
+            mydata: res.data.mydata[0],
+            board: res.data.board[0],
+            comment: res.data.comment[0],
+            active: res.data.active[0],
+          });
+        } else {
+          console.error("Request failed with status: ", res.status);
+        }
+      },
+      (error) => {
+        console.error("Error fetching data: ", error);
       }
-    }, (error) => {
-      console.error('Error fetching data: ', error);
+    );
+  };
+
+  const logOut = () => {
+    requestGet(URL.LOGOUT, null, (res) => {
+      if (res.status === CODE.SUCCESS) {
+        alert("로그아웃 되었습니다.");
+        setUser(null);
+        navigate(URL.MAIN);
+      }
     });
   };
 
@@ -35,12 +57,14 @@ const Mypage = () => {
   return (
     <div>
       <h2>마이페이지</h2>
-      {mydata ?
+      {mydata ? (
         <div>
-          총 게시글 수: {mydata.board ? mydata.board.count : '로딩중...'} &ensp;
-          총 댓글 수: {mydata.comment ? mydata.comment.count : '로딩중...'} &ensp;
-          총 활동기간: {mydata.active ? mydata.active.active_time : '로딩중...'}일
-          <br /><br />
+          총 게시글 수: {mydata.board ? mydata.board.count : "로딩중..."} &ensp;
+          총 댓글 수: {mydata.comment ? mydata.comment.count : "로딩중..."}{" "}
+          &ensp; 총 활동기간:{" "}
+          {mydata.active ? mydata.active.active_time : "로딩중..."}일
+          <br />
+          <br />
           <table>
             <thead>
               <tr>
@@ -68,11 +92,13 @@ const Mypage = () => {
                 <td>{mydata.mydata.email}</td>
               </tr>
             </thead>
-            <tbody>
-            </tbody>
+            <tbody></tbody>
           </table>
+          <button onClick={logOut}>로그아웃</button>
         </div>
-        : <div>로딩중입니다.</div>}
+      ) : (
+        <div>로딩중입니다.</div>
+      )}
     </div>
   );
 };

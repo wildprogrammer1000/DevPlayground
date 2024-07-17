@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { requestGet } from "../../api/fetch";
 import { CATEGORY } from "../../constants/constants";
 import URL from "../../constants/url";
-
-const columns = ["카테고리", "제목", "작성자"];
+import dayjs from "dayjs";
 
 const Board = ({ user }) => {
   const navigate = useNavigate();
@@ -48,55 +47,59 @@ const Board = ({ user }) => {
   return (
     <div>
       <h2>커뮤니티</h2>
-      <label>
-        <span>카테고리</span>
-        <select
-          onChange={(e) =>
-            setSearchOptions((state) => ({
-              ...state,
-              page: 0,
-              category: Number(e.target.value),
-            }))
-          }
-        >
-          <option value={-1}>전체</option>
-          {Object.keys(CATEGORY).map((category) => (
-            <option value={category} key={CATEGORY[category]}>
-              {CATEGORY[category]}
-            </option>
-          ))}
-        </select>
-      </label>
+      <div style={{ margin: "8px 0", textAlign: "right" }}>
+        <button onClick={createPost}>글쓰기</button>
+      </div>
       {board.length > 0 ? (
         <>
-          <table>
-            <thead>
-              <tr>
-                {columns.map((col, index) => (
-                  <th key={`col_${index}`}>{col}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {board.map((post, index) => (
-                <tr
-                  key={`post_${index}`}
-                  onClick={() =>
-                    navigate(URL.BOARD_DETAIL, { state: { post_id: post.id } })
-                  }
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "column",
+              gap: 8,
+              marginBottom: 8,
+            }}
+          >
+            {board.map((post, index) => (
+              <div
+                style={{ padding: 8, border: "2px solid #000" }}
+                key={`post_${index}`}
+                onClick={() =>
+                  navigate(URL.BOARD_DETAIL, { state: { post_id: post.id } })
+                }
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 8,
+                    marginBottom: 4,
+                  }}
                 >
-                  <td>{CATEGORY[post.category]}</td>
-                  <td>
-                    {post.title}
-                    {calculatePostTime(post.create_time) && "[N]"}
-                    {`[${post.cmt_count}]`}
-                  </td>
-                  <td>{post.nickname}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          <div style={{ display: "flex", gap: 8 }}>
+                  {calculatePostTime(post.create_time) ? <span>[N]</span> : ""}
+                  <span style={{ padding: 4, border: "1px solid #000" }}>
+                    {CATEGORY[post.category]}
+                  </span>
+                  <span>{post.title}</span>
+                  <span>[{post.cmt_count}]</span>
+                </div>
+                <div style={{ fontSize: 12 }}>
+                  <span>{post.nickname} * </span>
+                  <span>
+                    {dayjs(post.create_time).format("YYYY-MM-DD HH:mm")}{" "}
+                  </span>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              gap: 8,
+              marginBottom: 8,
+            }}
+          >
             <button
               disabled={searchOptions.page === 0}
               onClick={() =>
@@ -125,7 +128,35 @@ const Board = ({ user }) => {
       ) : (
         <p>게시글이 존재하지 않습니다.</p>
       )}
-      <button onClick={createPost}>글쓰기</button>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: 8,
+        }}
+      >
+        <label style={{ display: "block" }}>
+          <select
+            onChange={(e) =>
+              setSearchOptions((state) => ({
+                ...state,
+                page: 0,
+                category: Number(e.target.value),
+              }))
+            }
+          >
+            <option value={-1}>전체</option>
+            {Object.keys(CATEGORY).map((category) => (
+              <option value={category} key={CATEGORY[category]}>
+                {CATEGORY[category]}
+              </option>
+            ))}
+          </select>
+        </label>
+        <input placeholder="검색어를 입력해주세요" />
+        <button>검색</button>
+      </div>
     </div>
   );
 };

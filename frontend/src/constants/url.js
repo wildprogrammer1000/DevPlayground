@@ -41,6 +41,11 @@ const URL = {
 
   // 마이페이지
   MYPAGE_GET: "/mypage",
+
+  // 갤러리
+  GALLERY: "/gallery",
+  GALLERY_CREATE: "/gallery/create",
+  GALLERY_PIECE: "/gallery/piece",
 };
 
 export default URL;
