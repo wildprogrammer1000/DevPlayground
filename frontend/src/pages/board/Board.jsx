@@ -45,88 +45,112 @@ const Board = ({ user }) => {
   }, [searchOptions.page, searchOptions.category]);
 
   return (
-    <div>
-      <h2>커뮤니티</h2>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        height: "100%",
+      }}
+    >
       <div style={{ margin: "8px 0", textAlign: "right" }}>
         <button onClick={createPost}>글쓰기</button>
       </div>
-      {board.length > 0 ? (
-        <>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: 8,
-              marginBottom: 8,
-            }}
-          >
-            {board.map((post, index) => (
-              <div
-                style={{ padding: 8, border: "2px solid #000" }}
-                key={`post_${index}`}
-                onClick={() =>
-                  navigate(URL.BOARD_DETAIL, { state: { post_id: post.id } })
-                }
-              >
+      <div style={{ flex: 1, overflowY: "auto" }}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 8,
+            height: "100%",
+            overflowY: "auto",
+          }}
+        >
+          {board.length > 0 ? (
+            <>
+              {board.map((post, index) => (
                 <div
-                  style={{
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                    marginBottom: 4,
-                  }}
+                  style={{ padding: 12, border: "2px solid #000" }}
+                  key={`post_${index}`}
+                  onClick={() =>
+                    navigate(URL.BOARD_DETAIL, {
+                      state: { post_id: post.id },
+                    })
+                  }
                 >
-                  {calculatePostTime(post.create_time) ? <span>[N]</span> : ""}
-                  <span style={{ padding: 4, border: "1px solid #000" }}>
-                    {CATEGORY[post.category]}
-                  </span>
-                  <span>{post.title}</span>
-                  <span>[{post.cmt_count}]</span>
+                  <div
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: 8,
+                      marginBottom: 4,
+                    }}
+                  >
+                    {calculatePostTime(post.create_time) ? (
+                      <span>[N]</span>
+                    ) : (
+                      ""
+                    )}
+                    <span style={{ padding: 4, border: "1px solid #000" }}>
+                      {CATEGORY[post.category]}
+                    </span>
+                    <span
+                      style={{
+                        flex: 1,
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {post.title}
+                    </span>
+                    <span>[{post.cmt_count}]</span>
+                  </div>
+                  <div style={{ fontSize: 12 }}>
+                    <span>{post.nickname} * </span>
+                    <span>
+                      {dayjs(post.create_time).format("YYYY-MM-DD HH:mm")}{" "}
+                    </span>
+                  </div>
                 </div>
-                <div style={{ fontSize: 12 }}>
-                  <span>{post.nickname} * </span>
-                  <span>
-                    {dayjs(post.create_time).format("YYYY-MM-DD HH:mm")}{" "}
-                  </span>
-                </div>
-              </div>
-            ))}
-          </div>
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              gap: 8,
-              marginBottom: 8,
-            }}
+              ))}
+            </>
+          ) : (
+            <p>게시글이 존재하지 않습니다.</p>
+          )}
+        </div>
+      </div>
+      {board.length > 0 && (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            gap: 8,
+            marginBottom: 8,
+          }}
+        >
+          <button
+            disabled={searchOptions.page === 0}
+            onClick={() =>
+              setSearchOptions((state) => ({
+                ...state,
+                page: state.page - 1,
+              }))
+            }
           >
-            <button
-              disabled={searchOptions.page === 0}
-              onClick={() =>
-                setSearchOptions((state) => ({
-                  ...state,
-                  page: state.page - 1,
-                }))
-              }
-            >
-              이전
-            </button>
-            <div>{`${searchOptions.page + 1} / ${totalPage}`}</div>
-            <button
-              disabled={searchOptions.page + 1 === totalPage}
-              onClick={() =>
-                setSearchOptions((state) => ({
-                  ...state,
-                  page: state.page + 1,
-                }))
-              }
-            >
-              다음
-            </button>
-          </div>
-        </>
-      ) : (
-        <p>게시글이 존재하지 않습니다.</p>
+            이전
+          </button>
+          <div>{`${searchOptions.page + 1} / ${totalPage}`}</div>
+          <button
+            disabled={searchOptions.page + 1 === totalPage}
+            onClick={() =>
+              setSearchOptions((state) => ({
+                ...state,
+                page: state.page + 1,
+              }))
+            }
+          >
+            다음
+          </button>
+        </div>
       )}
       <div
         style={{
@@ -154,8 +178,8 @@ const Board = ({ user }) => {
             ))}
           </select>
         </label>
-        <input placeholder="검색어를 입력해주세요" />
-        <button>검색</button>
+        {/* <input placeholder="검색어를 입력해주세요" />
+        <button>검색</button> */}
       </div>
     </div>
   );

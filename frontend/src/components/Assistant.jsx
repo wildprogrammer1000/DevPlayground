@@ -109,8 +109,8 @@ const Assistant = () => {
             닫기
           </button>
         </div>
-        <div style={{ flex: 1, borderBottom: "2px solid #000" }}>
-          {components[menu] && components[menu]}
+        <div style={{ flex: 1, padding: 16, borderBottom: "2px solid #000" }}>
+          {components[menu] ? components[menu] : "준비중입니다.."}
         </div>
         <div style={{ display: "flex", height: 60 }}>
           <button style={{ flex: 1 }} onClick={() => setMenu(0)}>
@@ -141,19 +141,19 @@ const Assistant = () => {
         onMouseOver={() => {
           setPosition((state) => ({
             ...state,
-            x:
-              state.x > window.innerWidth / 2
-                ? state.x - size.x / 2
-                : state.x + size.x / 2,
+            x: state.x > window.innerWidth / 2 ? window.innerWidth : 0,
+          }));
+        }}
+        onTouchEnd={() => {
+          setPosition((state) => ({
+            ...state,
+            x: state.x > window.innerWidth / 2 ? window.innerWidth : 0,
           }));
         }}
         onMouseOut={() => {
           setPosition((state) => ({
             ...state,
-            x:
-              state.x > window.innerWidth / 2
-                ? state.x + size.x / 2
-                : state.x - size.x / 2,
+            x: state.x > window.innerWidth / 2 ? window.innerWidth : 0,
           }));
         }}
         onMouseDown={handleMouseDown}

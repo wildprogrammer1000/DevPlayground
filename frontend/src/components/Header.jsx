@@ -27,12 +27,12 @@ const Header = ({ user }) => {
         >
           커뮤니티
         </NavLink>
-        <NavLink
+        {/* <NavLink
           to={URL.GALLERY}
           className={({ isActive }) => (isActive ? style.on : style.off)}
         >
           갤러리
-        </NavLink>
+        </NavLink> */}
       </nav>
     </header>
   );

@@ -69,42 +69,47 @@ function App() {
     </Routes>
   ) : (
     <div className="app_container">
-      <Header user={user} setUser={setUser} />
-      <div className="app_content">
-        <Routes>
-          <Route
-            path={URL.MAIN}
-            element={<Main user={user} socket={socket} />}
-          />
-          <Route path={URL.LOGIN} element={<Login setUser={setUser} />} />
-          <Route path={URL.REGISTER} element={<Register setUser={setUser} />} />
+      <div className="app_wrapper">
+        <Header user={user} setUser={setUser} />
+        <div className="app_content">
+          <Routes>
+            <Route
+              path={URL.MAIN}
+              element={<Main user={user} socket={socket} />}
+            />
+            <Route path={URL.LOGIN} element={<Login setUser={setUser} />} />
+            <Route
+              path={URL.REGISTER}
+              element={<Register setUser={setUser} />}
+            />
 
-          <Route path={URL.BOARD} element={<Board user={user} />} />
-          <Route
-            path={URL.BOARD_CREATE}
-            element={<BoardCreate user={user} />}
-          />
-          <Route
-            path={URL.BOARD_DETAIL}
-            element={<BoardDetail user={user} />}
-          />
-          <Route path={URL.BOARD_EDIT} element={<BoardEdit user={user} />} />
-          <Route path={URL.REGISTER_WAIT} element={<RegisterWait />} />
+            <Route path={URL.BOARD} element={<Board user={user} />} />
+            <Route
+              path={URL.BOARD_CREATE}
+              element={<BoardCreate user={user} />}
+            />
+            <Route
+              path={URL.BOARD_DETAIL}
+              element={<BoardDetail user={user} />}
+            />
+            <Route path={URL.BOARD_EDIT} element={<BoardEdit user={user} />} />
+            <Route path={URL.REGISTER_WAIT} element={<RegisterWait />} />
 
-          <Route path={URL.MYPAGE_GET} element={<Mypage />} />
+            <Route path={URL.MYPAGE_GET} element={<Mypage />} />
 
-          <Route path={URL.GALLERY} element={<Gallery />} />
-          <Route path={URL.GALLERY_CREATE} element={<GalleryCreate />} />
-          <Route path={URL.GALLERY_PIECE} element={<GalleryPiece />} />
-        </Routes>
-        {/* {user && <Friend socket={socket} user={user} />} */}
+            {/* <Route path={URL.GALLERY} element={<Gallery />} />
+            <Route path={URL.GALLERY_CREATE} element={<GalleryCreate />} />
+            <Route path={URL.GALLERY_PIECE} element={<GalleryPiece />} /> */}
+          </Routes>
+          {/* {user && <Friend socket={socket} user={user} />} */}
+        </div>
+
+        <Footer />
+
+        <Assistant />
+        {/* <Toaster position="top-center" /> */}
+        {/* {PwaObserver} */}
       </div>
-
-      <Footer />
-
-      <Assistant />
-      {/* <Toaster position="top-center" /> */}
-      {/* {PwaObserver} */}
     </div>
   );
 }

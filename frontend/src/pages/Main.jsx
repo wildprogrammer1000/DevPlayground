@@ -6,8 +6,8 @@ const Main = ({ user, socket }) => {
   const canvas = useRef();
   return (
     <div>
-      {/* <Chat socket={socket} channel={"all"} user={user} /> */}
-      <Painter canvas={canvas} />
+      <Chat socket={socket} channel={"all"} user={user} />
+      {/* <Painter canvas={canvas} /> */}
     </div>
   );
 };
