@@ -60,7 +60,7 @@ const { getWaitingUsers, approveUser, rejectUser } = require("./admin");
 app.use(cookieParser());
 app.use(
   cors({
-    origin: [process.env.CLIENT_HOST1, process.env.CLIENT_HOST2],
+    cors: process.env.CORS.split(","),
     credentials: true,
   })
 );
