@@ -1,1 +1,1 @@
-{ "compilerOptions": { "baseUrl": "./src" }, "include": ["src"] }
+{ "compilerOptions": { "baseUrl": "./src" }, "include": ["src", "public/sw.js"] }

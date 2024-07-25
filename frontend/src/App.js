@@ -31,6 +31,8 @@ import Gallery from "pages/gallery/Gallery";
 import GalleryCreate from "pages/gallery/GalleryCreate";
 import GalleryPiece from "pages/gallery/GalleryPiece";
 
+import { registerServiceWorker } from "utils/sw-adapter";
+
 console.log("ENV: " + process.env.NODE_ENV);
 function App() {
   const location = useLocation();
@@ -50,6 +52,7 @@ function App() {
 
   useEffect(() => {
     connectSocket();
+    registerServiceWorker();
   }, []);
 
   useEffect(() => {

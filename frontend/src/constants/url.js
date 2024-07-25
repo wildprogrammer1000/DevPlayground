@@ -46,6 +46,11 @@ const URL = {
   GALLERY: "/gallery",
   GALLERY_CREATE: "/gallery/create",
   GALLERY_PIECE: "/gallery/piece",
+
+  // Web Push
+  WEBPUSH_VAPID_PUBLIC_KEY: "/webpush/vapid_public_key",
+  WEBPUSH_SUBSCRIBE: "/webpush/subscribe",
+  WEBPUSH_UNSUBSCRIBE: "/webpush/unsubscribe",
 };
 
 export default URL;

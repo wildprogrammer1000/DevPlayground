@@ -30,6 +30,7 @@ services:
 
   nodejs:
     container_name: backend
+    image: wildsoft/playgrounddev:latest
     build: "./"
     env_file: ".env"
     ports:

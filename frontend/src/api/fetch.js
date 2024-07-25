@@ -16,6 +16,7 @@ export const requestGet = async (url, params = {}, handler, errorHandler) => {
     }
     // console.log("GET response: ", response);
     if (handler) handler(response);
+    return response;
   } catch (err) {
     if (errorHandler) errorHandler(err);
   }
@@ -36,6 +37,7 @@ export const requestPost = async (url, data = {}, handler, errorHandler) => {
     }
     // console.log("POST response: ", response);
     if (handler) handler(response);
+    return response;
   } catch (err) {
     if (errorHandler) errorHandler(err);
   }
@@ -55,6 +57,7 @@ export const requestDelete = async (url, data = {}, handler, errorHandler) => {
     }
     // console.log("DELETE response: ", response);
     if (handler) handler(response);
+    return response;
   } catch (err) {
     if (errorHandler) errorHandler(err);
   }

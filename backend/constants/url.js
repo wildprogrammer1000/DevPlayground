@@ -1,7 +1,7 @@
 const URL = {
   MAIN: "/",
 
-  // 로그인
+  // Login
   LOGIN: "/login",
   LOGOUT: "/logout",
   LOGIN_GOOGLE: "/login/google",
@@ -11,14 +11,14 @@ const URL = {
   REGISTER_WAIT: "/register/wait",
   VERIFY_NICKNAME: "/register/verify",
 
-  // 관리자
+  // Admin
   ADMIN: "/admin",
   ADMIN_MANAGE_WAITING: "/admin/manage_waiting",
   ADMIN_GET_WATIING_USERS: "/admin/waiting_users",
   ADMIN_APPROVE_USER: "/admin/approve_user",
   ADMIN_REJECT_USER: "/admin/reject_user",
 
-  // 커뮤니티
+  // Community
   BOARD: "/board",
   BOARD_CREATE: "/board/create",
   BOARD_DETAIL: "/board/detail",
@@ -27,7 +27,7 @@ const URL = {
   BOARD_COMMENT: "/board/comment",
   BOARD_LIKE: "/board/like",
 
-  // 친구
+  // Friend
   FRIEND_GET: "/friend",
   FRIEND_REQUEST: "/friend/request",
   FRIEND_CANCEL: "/friend/cancel",
@@ -36,11 +36,16 @@ const URL = {
   FRIEND_REFUSE: "/friend/refuse",
   FRIEND_MESSAGE: "/friend/message",
 
-  // 알림
+  // Notification
   NOTIFICATION_GET: "/notification",
 
-  // 마이페이지
+  // Mypage
   MYPAGE_GET: "/mypage",
+
+  // Web Push
+  WEBPUSH_VAPID_PUBLIC_KEY: "/webpush/vapid_public_key",
+  WEBPUSH_SUBSCRIBE: "/webpush/subscribe",
+  WEBPUSH_UNSUBSCRIBE: "/webpush/unsubscribe",
 };
 
 module.exports = { URL };

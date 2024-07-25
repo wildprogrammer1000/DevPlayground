@@ -82,3 +82,12 @@ create table if not exists messages (
 	foreign key (sender_id) references users(id),
 	foreign key (receiver_id) references users(id)
 );
+
+create table if not exists webpush_subscriptions (
+	id int primary key auto_increment,
+	endpoint text not null,
+	p256dh text not null,
+	auth text not null,
+	create_time timestamp default current_timestamp(),
+	unique(endpoint)
+);

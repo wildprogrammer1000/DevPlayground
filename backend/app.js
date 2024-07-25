@@ -20,15 +20,6 @@ const {
 } = require("./friend");
 const { getNotifications } = require("./notification");
 
-const app = express();
-const httpServer = createServer(app);
-const io = new Server(httpServer, {
-  cors: process.env.CORS.split(","),
-});
-redis.io = io;
-setSocketIO(io);
-io.on("connection", onConnection);
-
 const {
   logOut,
   validateSession,
@@ -51,11 +42,22 @@ const {
   getLikes,
   toggleLike,
 } = require("./board/board");
-const { getMypage, deleteUser } = require("./mypage/mypage");
-
-// Temp
-const { pool } = require("./db/connection");
+const { getMypage } = require("./mypage/mypage");
 const { getWaitingUsers, approveUser, rejectUser } = require("./admin");
+const {
+  getVapidPublicKey,
+  subscribe,
+  unsubscribe,
+} = require("./webpush");
+
+const app = express();
+const httpServer = createServer(app);
+const io = new Server(httpServer, {
+  cors: process.env.CORS.split(","),
+});
+redis.io = io;
+setSocketIO(io);
+io.on("connection", onConnection);
 
 app.use(cookieParser());
 app.use(
@@ -111,22 +113,12 @@ app.get(URL.NOTIFICATION_GET, validateSession, getNotifications);
 // Mypage
 app.get(URL.MYPAGE_GET, validateSession, getMypage);
 
-// Temp
-app.get("/db", async (req, res) => {
-  const conn = await pool.getConnection();
-  if (conn) {
-    conn.release();
-  }
-  res.send("OK");
-});
+// Web Push
+app.get(URL.WEBPUSH_VAPID_PUBLIC_KEY, getVapidPublicKey);
+app.post(URL.WEBPUSH_SUBSCRIBE, subscribe);
+app.post(URL.WEBPUSH_UNSUBSCRIBE, unsubscribe);
 
 app.get("/", (req, res) => res.send("Healthy"));
-app.get("/subscribe_test", (req, res) => {
-  const { token, topic } = req.query;
-  subscribeTopic(token, topic);
-
-  res.send("ok");
-});
 
 httpServer.listen(process.env.EXPRESS_PORT, () => {
   console.log("server started");

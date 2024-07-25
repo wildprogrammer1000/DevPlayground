@@ -84,7 +84,8 @@ const QUERY = {
   (user1_id, user2_id, state) values (?, ?, ?)
   on duplicate key update state=?
   `,
-  FRIEND_DELETE: "delete from friends where (user1_id=? and user2_id=?) or (user1_id=? and user2_id=?)",
+  FRIEND_DELETE:
+    "delete from friends where (user1_id=? and user2_id=?) or (user1_id=? and user2_id=?)",
   FRIEND_CHECK:
     "select * from friends where (user1_id=? and user2_id=?) or (user1_id=? and user2_id=?)",
 
@@ -104,7 +105,7 @@ const QUERY = {
   `,
   MESSAGE_SEND:
     "insert into messages (sender_id, receiver_id, content) values (?, ?, ?)",
-    
+
   // Mypage
   MYPAGE_GET: `select * from users where id = ?`,
   MYPAGE_GET_BOARD: `select count(*) as count from board where user_id = ?`,
@@ -114,6 +115,11 @@ const QUERY = {
   from users where id = ?
   `, // 가입 당일이 0 이어서 + 1 추가
   MYPAGE_DELETE_USER: `delete from users where id = ?`,
+
+  // Web Push
+  WEBPUSH_SUBSCRIBE:
+    "insert into webpush_subscriptions (endpoint, p256dh, auth) values(?, ?, ?) on duplicate key update p256dh = values(p256dh), auth = values(auth), create_time = current_timestamp()",
+  WEBPUSH_UNSUBSCRIBE: "delete from webpush_subscriptions where endpoint=?",
 };
 
 module.exports = { QUERY };
