@@ -6,9 +6,10 @@
 /frontend/public/firebase-messaging-sw.js
 
 # Backend
-/backend/.env
+/backend/nodejs/.env
 /backend/node_modules
-/backend/utils/fcm_account.json
+/backend/nodejs/node_modules
+/backend/nodejs/utils/fcm_account.json
 
 # Deploy
 deploy.sh

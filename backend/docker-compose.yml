@@ -1,24 +1,16 @@
+version: "3.8"
 services:
   maria:
     container_name: db
     image: mariadb
-    env_file: ".env"
+    env_file: "./nodejs/.env"
     ports:
       - 3306:3306
     volumes:
       - maria:/var/lib/mysql
     healthcheck:
-      test:
-        [
-          "CMD",
-          "mariadb-admin",
-          "ping",
-          "-h",
-          "localhost",
-          "-u",
-          "root",
-          "-p$MARIADB_PASSWORD",
-        ]
+      test: ["CMD-SHELL", "mariadb-admin ping -h localhost -u root -ptest"]
+
       timeout: 1s
       interval: 1s
       retries: 3
@@ -31,14 +23,24 @@ services:
   nodejs:
     container_name: backend
     image: wildsoft/playgrounddev:latest
-    build: "./"
-    env_file: ".env"
+    build: "./nodejs"
+    env_file: "./nodejs/.env"
     ports:
       - 80:80
     restart: always
     depends_on:
       redis:
         condition: service_started
+      maria:
+        condition: service_healthy
+  springboot:
+    container_name: springboot
+    build: ./springboot/ecommerce
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+    depends_on:
       maria:
         condition: service_healthy
 volumes:
