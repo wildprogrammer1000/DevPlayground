@@ -3,22 +3,18 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.wildsoft.ecommerce.project.shop.ShopDao">
+<mapper namespace="com.wildsoft.ecommerce.shop.project.shop.ShopDao">
     
   <select id="getProductList"
-    parameterType="com.wildsoft.ecommerce.project.shop.ProductVO"
-    resultType="com.wildsoft.ecommerce.project.shop.ProductVO">
+    parameterType="com.wildsoft.ecommerce.shop.project.shop.ProductVO"
+    resultType="com.wildsoft.ecommerce.shop.project.shop.ProductVO">
     <![CDATA[
-      select p.product_id, product_image_id, product_name, 
-      product_description, product_price, stock_quantity, 
-      category, product_image_url, is_primary, p.created_at, 
-      p.updated_at from products p join product_images i
-      on p.product_id = i.product_id
+      select * from products
     ]]>
   </select>
 
   <insert id="insertProduct"
-    parameterType="com.wildsoft.ecommerce.project.shop.ProductVO">
+    parameterType="com.wildsoft.ecommerce.shop.project.shop.ProductVO">
     insert into products (product_name, product_description, product_price, category, stock_quantity)
     values (#{product_name}, #{product_description}, #{product_price}, #{category}, #{stock_quantity})
     <selectKey keyProperty="product_id" resultType="int" order="AFTER">
@@ -27,7 +23,7 @@
   </insert>
 
   <insert id="insertProductImage"
-    parameterType="com.wildsoft.ecommerce.project.shop.ProductVO">
+    parameterType="com.wildsoft.ecommerce.shop.project.shop.ProductVO">
     insert into product_images (product_id, product_image_url, is_primary)
     values (#{product_id}, #{product_image_url}, #{is_primary})
   </insert>

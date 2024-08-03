@@ -1,4 +1,4 @@
-package com.wildsoft.ecommerce.controller;
+package com.wildsoft.ecommerce.shop.controller;
 
 import java.util.List;
 
@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.wildsoft.ecommerce.project.user.UserService;
-import com.wildsoft.ecommerce.project.user.UserVO;
+import com.wildsoft.ecommerce.shop.project.user.UserService;
+import com.wildsoft.ecommerce.shop.project.user.UserVO;
 @RestController
 public class StartController {
 

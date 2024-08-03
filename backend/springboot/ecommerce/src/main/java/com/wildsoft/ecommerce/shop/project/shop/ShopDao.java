@@ -1,4 +1,4 @@
-package com.wildsoft.ecommerce.project.shop;
+package com.wildsoft.ecommerce.shop.project.shop;
 
 import java.util.List;
 

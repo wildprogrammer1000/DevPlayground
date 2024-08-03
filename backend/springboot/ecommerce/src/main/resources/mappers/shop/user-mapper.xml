@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.wildsoft.ecommerce.project.user.UserDao">
+<mapper namespace="com.wildsoft.ecommerce.shop.project.user.UserDao">
 
   <select id="getUserList"
-    parameterType="com.wildsoft.ecommerce.project.user.UserVO"
-    resultType="com.wildsoft.ecommerce.project.user.UserVO">
+    parameterType="com.wildsoft.ecommerce.shop.project.user.UserVO"
+    resultType="com.wildsoft.ecommerce.shop.project.user.UserVO">
     <![CDATA[
       SELECT * FROM users ORDER BY id DESC
     ]]>
@@ -34,8 +34,8 @@
   </select>
 
 	<select id="getUser"
-    parameterType="com.wildsoft.ecommerce.project.user.UserVO"
-    resultType="com.wildsoft.ecommerce.project.user.UserVO">
+    parameterType="com.wildsoft.ecommerce.shop.project.user.UserVO"
+    resultType="com.wildsoft.ecommerce.shop.project.user.UserVO">
 
       select * from users where id = #{id}
   </select>
