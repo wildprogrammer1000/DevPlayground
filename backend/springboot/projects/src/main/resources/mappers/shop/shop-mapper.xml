@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wildsoft.projects.shop.project.shop.ShopDao">
+    
+  <select id="getProductList"
+    parameterType="com.wildsoft.projects.shop.project.shop.ProductVO"
+    resultType="com.wildsoft.projects.shop.project.shop.ProductVO">
+    <![CDATA[
+      select * from products
+    ]]>
+  </select>
+
+  <insert id="insertProduct"
+    parameterType="com.wildsoft.projects.shop.project.shop.ProductVO">
+    insert into products (product_name, product_description, product_price, category, stock_quantity)
+    values (#{product_name}, #{product_description}, #{product_price}, #{category}, #{stock_quantity})
+    <selectKey keyProperty="product_id" resultType="int" order="AFTER">
+      select last_insert_id()
+    </selectKey>
+  </insert>
+
+  <insert id="insertProductImage"
+    parameterType="com.wildsoft.projects.shop.project.shop.ProductVO">
+    insert into product_images (product_id, product_image_url, is_primary)
+    values (#{product_id}, #{product_image_url}, #{is_primary})
+  </insert>
+
+</mapper>

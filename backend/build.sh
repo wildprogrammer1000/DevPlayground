@@ -1,3 +1,3 @@
-cd ./springboot/ecommerce &&
+cd ./springboot/projects &&
 ./mvnw clean package &&
 cd ../..

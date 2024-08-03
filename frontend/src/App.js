@@ -30,6 +30,7 @@ import Mypage from "./pages/mypage/Mypage";
 import Gallery from "pages/gallery/Gallery";
 import GalleryCreate from "pages/gallery/GalleryCreate";
 import GalleryPiece from "pages/gallery/GalleryPiece";
+import Shop from "shop/pages/Shop";
 
 import { registerServiceWorker } from "utils/sw-adapter";
 
@@ -99,6 +100,10 @@ function App() {
             <Route path={URL.REGISTER_WAIT} element={<RegisterWait />} />
 
             <Route path={URL.MYPAGE_GET} element={<Mypage />} />
+
+            {/* Shop */}
+            <Route path={URL.SHOP} element={<Shop />} />
+            <Route path={URL.SHOP_ADMIN} element />
 
             {/* <Route path={URL.GALLERY} element={<Gallery />} />
             <Route path={URL.GALLERY_CREATE} element={<GalleryCreate />} />

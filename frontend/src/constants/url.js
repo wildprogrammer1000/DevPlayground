@@ -36,6 +36,10 @@ const URL = {
   FRIEND_REFUSE: "/friend/refuse",
   FRIEND_MESSAGE: "/friend/message",
 
+  // 쇼핑몰
+  SHOP: "/shop",
+  SHOP_ADMIN: "/shop/admin",
+
   // 알림
   NOTIFICATION_GET: "/notification",
 
