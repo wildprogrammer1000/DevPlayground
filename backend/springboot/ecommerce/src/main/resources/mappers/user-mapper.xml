@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wildsoft.ecommerce.project.user.UserDao">
+
+  <select id="getUserList"
+    parameterType="com.wildsoft.ecommerce.project.user.UserVO"
+    resultType="com.wildsoft.ecommerce.project.user.UserVO">
+    <![CDATA[
+      SELECT * FROM users ORDER BY id DESC
+    ]]>
+    <!-- <![CDATA[
+      select * from users where 1=1
+		]]>
+		<if test="ch1=='nickname'">
+		<![CDATA[
+			and nickname like '%'||#{ch2}||'%'
+		]]>
+		</if>
+		<if test="ch1=='role'">
+		<![CDATA[
+			and role like '%'||#{ch2}||'%'
+		]]>
+		</if>
+		<if test="ch1=='platform'">
+		<![CDATA[	
+			and platform like '%'||#{ch2}||'%'
+		]]>
+		</if>
+		<![CDATA[
+			order by id desc
+		]]> -->
+  </select>
+
+	<select id="getUser"
+    parameterType="com.wildsoft.ecommerce.project.user.UserVO"
+    resultType="com.wildsoft.ecommerce.project.user.UserVO">
+
+      select * from users where id = #{id}
+  </select>
+
+ </mapper>
