@@ -13,4 +13,13 @@ public class ProductVO {
   private String category;
   private String created_at;
   private String updated_at;
+
+  // 페이지 나누기
+  private int rnum;
+  private int start;
+  private int end;
+
+  // 검색
+  private String search_type; 
+  private String search_value;
 }
