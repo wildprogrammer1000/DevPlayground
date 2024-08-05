@@ -9,23 +9,58 @@
     parameterType="com.wildsoft.projects.shop.project.shop.ProductVO"
     resultType="com.wildsoft.projects.shop.project.shop.ProductVO">
     <![CDATA[
-      select * from products
+      select rnum, q.*
+      from (
+        select
+          row_number() over (order by product_id desc) as rnum,
+          k.*
+        from (
+          select * from products where 1=1
     ]]>
+    <if test="search_type == 'product_name'">
+    <![CDATA[
+          and product_name like concat('%', #{search_value}, '%')
+    ]]>
+    </if>
+    <if test="search_type == 'category'">
+    <![CDATA[
+          and category like concat('%', #{category}, '%')
+    ]]>
+    </if>
+    <if test="search_type == 'created_at'">
+    <![CDATA[
+          and created_at like concat('%', #{created_at}, '%')
+    ]]>
+    </if>
+    <![CDATA[
+        ) k
+      ) q
+      where rnum between #{start} and #{end}
+    ]]>
+  </select>
+
+  <select id="getProductOne"
+    parameterType="com.wildsoft.projects.shop.project.shop.ProductVO"
+    resultType="com.wildsoft.projects.shop.project.shop.ProductVO">
+    select * from products where product_id=#{product_id}
   </select>
 
   <insert id="insertProduct"
     parameterType="com.wildsoft.projects.shop.project.shop.ProductVO">
     insert into products (product_name, product_description, product_price, category, stock_quantity)
     values (#{product_name}, #{product_description}, #{product_price}, #{category}, #{stock_quantity})
-    <selectKey keyProperty="product_id" resultType="int" order="AFTER">
-      select last_insert_id()
-    </selectKey>
   </insert>
 
-  <insert id="insertProductImage"
+  <update id="updateProduct"
     parameterType="com.wildsoft.projects.shop.project.shop.ProductVO">
-    insert into product_images (product_id, product_image_url, is_primary)
-    values (#{product_id}, #{product_image_url}, #{is_primary})
-  </insert>
+    update products set product_name=#{product_name}, product_description=#{product_description},
+    product_price=#{product_price}, category=#{category}, stock_quantity=#{stock_quantity}
+    where product_id=#{product_id}
+  </update>
+
+  <delete id="deleteProduct"
+    parameterType="com.wildsoft.projects.shop.project.shop.ProductVO">
+    delete from products where product_id=#{product_id}
+  </delete>
 
 </mapper>
