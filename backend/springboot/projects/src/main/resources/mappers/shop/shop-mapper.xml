@@ -4,7 +4,7 @@
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.wildsoft.projects.shop.project.shop.ShopDao">
-    
+  <!-- 상품 -->
   <select id="getProductList"
     parameterType="com.wildsoft.projects.shop.project.shop.ProductVO"
     resultType="com.wildsoft.projects.shop.project.shop.ProductVO">
@@ -63,4 +63,49 @@
     delete from products where product_id=#{product_id}
   </delete>
 
+  <!-- 장바구니 -->
+  <select id="getCartList"
+    parameterType="com.wildsoft.projects.shop.project.shop.CartVO"
+    resultType="com.wildsoft.projects.shop.project.shop.CartVO">
+    <![CDATA[
+      select * from carts where id=#{id} order by cart_id desc;
+    ]]>
+  </select>
+
+  <select id="getCartOne"
+    parameterType="com.wildsoft.projects.shop.project.shop.CartVO"
+    resultType="com.wildsoft.projects.shop.project.shop.CartVO">
+    select * from carts where cart_id=#{cart_id}
+  </select>
+
+  <!-- id와 product_id로 기존 레코드를 조회하는 쿼리 -->
+  <select id="getCartsByIdAndProductId" 
+    parameterType="com.wildsoft.projects.shop.project.shop.CartVO" 
+    resultType="com.wildsoft.projects.shop.project.shop.CartVO">
+    select * from carts
+    where id = #{id} and product_id = #{product_id}
+  </select>
+
+  <insert id="insertCart"
+    parameterType="com.wildsoft.projects.shop.project.shop.CartVO">
+    insert into carts (id, product_id, product_price, quantity)
+    values (#{id}, #{product_id}, #{product_price}, #{quantity})
+  </insert>
+
+  <update id="updateCart"
+    parameterType="com.wildsoft.projects.shop.project.shop.CartVO">
+    update carts set product_price = product_price + #{product_price}, 
+    quantity = quantity + #{quantity}
+    where id=#{id} and product_id=#{product_id}
+  </update>
+
+  <delete id="deleteCart"
+    parameterType="com.wildsoft.projects.shop.project.shop.CartVO">
+    delete from carts where cart_id=#{cart_id}
+  </delete>
+
+  <delete id="deleteAllCart"
+    parameterType="com.wildsoft.projects.shop.project.shop.CartVO">
+    delete from carts where id=#{id}
+  </delete>
 </mapper>

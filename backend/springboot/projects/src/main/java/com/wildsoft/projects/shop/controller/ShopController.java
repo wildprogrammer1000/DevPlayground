@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.wildsoft.projects.shop.project.shop.CartVO;
 import com.wildsoft.projects.shop.project.shop.ProductVO;
 import com.wildsoft.projects.shop.project.shop.ShopService;
 
@@ -20,6 +21,7 @@ public class ShopController {
   @Autowired
   private ShopService service;
 
+  // 상품
   @GetMapping("/productList")
   public List<ProductVO> productList(ProductVO vo) {
     return service.getProductList(vo);
@@ -46,6 +48,41 @@ public class ShopController {
   public String deleteProduct(ProductVO vo) {
     service.deleteProduct(vo);
     return "delete Successfully";
+  }
+
+  // 장바구니
+  @GetMapping("/cartList")
+  public List<CartVO> cartList(CartVO vo) {
+    return service.getCartList(vo);
+  }
+
+  @GetMapping("/cartOne")
+  public CartVO cartOne(CartVO vo) {
+    return service.getCartOne(vo);
+  }
+
+  @PostMapping("/insertCart")
+  public ResponseEntity<String> insertCart(CartVO vo) {
+    List<CartVO> existingCarts = service.getCartsByIdAndProductId(vo);
+    if (existingCarts.isEmpty()) {
+      service.insertCart(vo);
+      return ResponseEntity.ok("장바구니에 추가되었습니다.");
+    } else {
+      service.updateCart(vo);
+      return ResponseEntity.ok("장바구니에 이미 제품이 있어 수량만큼 추가되었습니다.");
+    }
+  }
+
+  @PostMapping("/deleteCart")
+  public String deleteCart(CartVO vo) {
+    service.deleteCart(vo);
+    return "해당 상품을 장바구니에서 삭제하였습니다.";
+  }
+
+  @PostMapping("/deleteAllCart")
+  public String deleteAllCart(CartVO vo) {
+    service.deleteAllCart(vo);
+    return "장바구니의 상품을 전체 삭제하였습니다.";
   }
 
 }
