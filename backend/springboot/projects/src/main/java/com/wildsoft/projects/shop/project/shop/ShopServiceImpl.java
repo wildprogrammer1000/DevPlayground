@@ -38,4 +38,39 @@ public class ShopServiceImpl implements ShopService {
     dao.deleteProduct(vo);
   }
 
+  @Override
+  public List<CartVO> getCartList(CartVO vo) {
+    return dao.getCartList(vo);
+  }
+
+  @Override
+  public CartVO getCartOne(CartVO vo) {
+    return dao.getCartOne(vo);
+  }
+
+  @Override
+  public List<CartVO> getCartsByIdAndProductId(CartVO vo) {
+    return dao.getCartsByIdAndProductId(vo);
+  }
+
+  @Override
+  public void insertCart(CartVO vo) {
+    dao.insertCart(vo);
+  }
+
+  @Override
+  public void updateCart(CartVO vo) {
+    dao.updateCart(vo);
+  }
+
+  @Override
+  public void deleteCart(CartVO vo) {
+    dao.deleteCart(vo);
+  }
+
+  @Override
+  public void deleteAllCart(CartVO vo) {
+    dao.deleteAllCart(vo);
+  }
+
 }
