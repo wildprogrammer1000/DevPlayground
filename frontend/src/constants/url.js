@@ -55,6 +55,10 @@ const URL = {
   WEBPUSH_VAPID_PUBLIC_KEY: "/webpush/vapid_public_key",
   WEBPUSH_SUBSCRIBE: "/webpush/subscribe",
   WEBPUSH_UNSUBSCRIBE: "/webpush/unsubscribe",
+
+  // API
+  INSERT_PRODUCT: "/api/insertProduct",
+  
 };
 
 export default URL;

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { SERVER_URL } from "../config";
+import { SERVER_URL, SPRINGBOOT_SERVER_URL } from "../config";
 import CODE from "../constants/code";
 
 export const requestGet = async (url, params = {}, handler, errorHandler) => {
@@ -56,6 +56,24 @@ export const requestDelete = async (url, data = {}, handler, errorHandler) => {
       return;
     }
     // console.log("DELETE response: ", response);
+    if (handler) handler(response);
+    return response;
+  } catch (err) {
+    if (errorHandler) errorHandler(err);
+  }
+};
+
+export const requestFetch = async (
+  url,
+  requestOptions,
+  handler,
+  errorHandler
+) => {
+  try {
+    const response = await axios({
+      url: SPRINGBOOT_SERVER_URL + url,
+      ...requestOptions,
+    });
     if (handler) handler(response);
     return response;
   } catch (err) {

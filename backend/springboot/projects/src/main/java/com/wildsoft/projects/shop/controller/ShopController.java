@@ -10,12 +10,15 @@ import com.wildsoft.projects.shop.project.shop.CartVO;
 import com.wildsoft.projects.shop.project.shop.ProductVO;
 import com.wildsoft.projects.shop.project.shop.ShopService;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "${cors.allowed.origins}")
 public class ShopController {
 
   @Autowired
@@ -33,7 +36,8 @@ public class ShopController {
   }
 
   @PostMapping("/insertProduct")
-  public ResponseEntity<String> insertProduct(ProductVO vo) {
+  public ResponseEntity<String> insertProduct(@RequestBody ProductVO vo) {
+    System.out.println(vo);
     service.insertProduct(vo);
     return ResponseEntity.ok("insert successfully");
   }

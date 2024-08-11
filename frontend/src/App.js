@@ -33,6 +33,7 @@ import GalleryPiece from "pages/gallery/GalleryPiece";
 import Shop from "shop/pages/Shop";
 
 import { registerServiceWorker } from "utils/sw-adapter";
+import ShopAdmin from "shop/pages/ShopAdmin";
 
 console.log("ENV: " + process.env.NODE_ENV);
 function App() {
@@ -66,12 +67,7 @@ function App() {
     });
   }, [location]);
 
-  return location.pathname.includes(URL.ADMIN) ? (
-    <Routes>
-      <Route path={URL.ADMIN} element={<Admin />} />
-      <Route path={URL.ADMIN_MANAGE_WAITING} element={<AdminManageWaiting />} />
-    </Routes>
-  ) : (
+  return (
     <div className="app_container">
       <div className="app_wrapper">
         <Header user={user} setUser={setUser} />
@@ -103,7 +99,7 @@ function App() {
 
             {/* Shop */}
             <Route path={URL.SHOP} element={<Shop />} />
-            <Route path={URL.SHOP_ADMIN} element />
+            <Route path={URL.SHOP_ADMIN} element={<ShopAdmin />} />
 
             {/* <Route path={URL.GALLERY} element={<Gallery />} />
             <Route path={URL.GALLERY_CREATE} element={<GalleryCreate />} />
@@ -120,6 +116,7 @@ function App() {
       </div>
     </div>
   );
+  // );
 }
 
 export default App;
