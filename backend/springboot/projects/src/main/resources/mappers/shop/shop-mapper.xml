@@ -68,7 +68,7 @@
     parameterType="com.wildsoft.projects.shop.project.shop.CartVO"
     resultType="com.wildsoft.projects.shop.project.shop.CartVO">
     <![CDATA[
-      select * from carts where id=#{id} order by cart_id desc;
+      select * from carts where id=#{id} order by cart_id desc
     ]]>
   </select>
 
@@ -108,4 +108,18 @@
     parameterType="com.wildsoft.projects.shop.project.shop.CartVO">
     delete from carts where id=#{id}
   </delete>
+
+  <!-- 유저 추가 정보 -->
+  <!-- id로 기존 레코드를 조회하는 쿼리 -->
+  <select id="getUserInfosById" 
+    parameterType="com.wildsoft.projects.shop.project.shop.UserInfoVO" 
+    resultType="com.wildsoft.projects.shop.project.shop.UserInfoVO">
+    select * from user_infos where id = #{id} 
+  </select>
+
+  <insert id="insertUserInfos"
+    parameterType="com.wildsoft.projects.shop.project.shop.UserInfoVO">
+    insert into user_infos (id, name, phone, address)
+    values (#{id}, #{name}, #{phone}, #{address})
+  </insert>
 </mapper>

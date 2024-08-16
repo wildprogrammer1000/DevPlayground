@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.wildsoft.projects.shop.project.shop.CartVO;
 import com.wildsoft.projects.shop.project.shop.ProductVO;
 import com.wildsoft.projects.shop.project.shop.ShopService;
+import com.wildsoft.projects.shop.project.shop.UserInfoVO;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -37,7 +38,6 @@ public class ShopController {
 
   @PostMapping("/insertProduct")
   public ResponseEntity<String> insertProduct(@RequestBody ProductVO vo) {
-    System.out.println(vo);
     service.insertProduct(vo);
     return ResponseEntity.ok("insert successfully");
   }
@@ -87,6 +87,23 @@ public class ShopController {
   public String deleteAllCart(CartVO vo) {
     service.deleteAllCart(vo);
     return "장바구니의 상품을 전체 삭제하였습니다.";
+  }
+
+  @PostMapping("/order")
+  public ResponseEntity<?> order(UserInfoVO vo) {
+    UserInfoVO info = service.getUserInfosById(vo);
+    if (info != null) {
+      return ResponseEntity.ok(info);
+    } else {
+      return ResponseEntity.ok("추가 정보를 입력해주세요.");
+    }
+  }
+
+  // 유저 추가 정보 입력
+  @PostMapping("/insertUserInfos")
+  public ResponseEntity<String> insertUserInfos(@RequestBody UserInfoVO vo) {
+    service.insertUserInfos(vo);
+    return ResponseEntity.ok("추가 정보 입력이 완료되었습니다.");
   }
 
 }

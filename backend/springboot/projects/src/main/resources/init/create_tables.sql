@@ -23,9 +23,8 @@ CREATE TABLE IF NOT EXISTS carts (
     FOREIGN KEY (product_id) REFERENCES products(product_id) -- 상품 외래키
 );
 
--- 고객 정보 테이블
-CREATE TABLE IF NOT EXISTS customers (
-    customer_id INT AUTO_INCREMENT PRIMARY KEY,       -- 고객 ID (기본키)
+-- 유저 추가 정보 테이블
+CREATE TABLE IF NOT EXISTS user_infos (
     id INT UNIQUE,                                   -- 사용자 ID (외래키)
     name VARCHAR(255) NOT NULL,                      -- 고객명
     phone VARCHAR(20),                              -- 전화번호
@@ -33,4 +32,21 @@ CREATE TABLE IF NOT EXISTS customers (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,  -- 생성 일시
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 수정 일시
     FOREIGN KEY (id) REFERENCES users(id) -- 사용자 외래키
+);
+
+-- 주문 정보 테이블
+CREATE TABLE IF NOT EXISTS orders (
+    order_id INT AUTO_INCREMENT PRIMARY KEY,           -- 주문 ID (기본키)
+    id INT NOT NULL,                                   -- 사용자 ID (외래키)
+    product_id INT NOT NULL,                          -- 상품 ID (외래키)
+    quantity INT NOT NULL,                             -- 수량
+    total_price DECIMAL(10, 2) NOT NULL,             -- 총 주문 금액 (상품 금액 + 배송비)
+    shipping_fee DECIMAL(10, 2) NOT NULL,             -- 배송비
+    status ENUM('결제완료', '결제취소', '배송준비', '배송중', '배송완료', '교환', '환불') NOT NULL, -- 주문 상태
+    shipping_address TEXT,                             -- 배송 주소
+    payment_method ENUM('Credit Card', 'KakaoPay', 'Bank Transfer') NOT NULL, -- 결제 방법
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,     -- 생성 일시 (주문 일시)
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, -- 수정 일시
+    FOREIGN KEY (id) REFERENCES users(id), -- 사용자 외래키
+    FOREIGN KEY (product_id) REFERENCES products(product_id) -- 상품 외래키
 );

@@ -21,4 +21,9 @@ public interface ShopDao {
   void updateCart(CartVO vo);
   void deleteCart(CartVO vo);
   void deleteAllCart(CartVO vo);
+
+  // 유저 추가 정보 입력
+  UserInfoVO getUserInfosById(UserInfoVO vo);
+  void insertUserInfos(UserInfoVO vo);
+  void updateUserInfos(UserInfoVO vo);
 }
