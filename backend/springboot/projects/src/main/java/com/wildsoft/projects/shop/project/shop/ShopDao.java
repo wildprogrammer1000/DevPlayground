@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Mapper;
 public interface ShopDao {
   // 상품 목록
   List<ProductVO> getProductList(ProductVO vo);
+  int getProductsCount();
   ProductVO getProduct(ProductVO vo);
   void insertProduct(ProductVO vo);
   void updateProduct(ProductVO vo);

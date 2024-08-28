@@ -5,6 +5,7 @@ import java.util.List;
 public interface ShopService {
   // 상품 목록
   List<ProductVO> getProductList(ProductVO vo);
+  int getProductsCount();
   ProductVO getProduct(ProductVO vo);
   void insertProduct(ProductVO vo);
   void updateProduct(ProductVO vo);

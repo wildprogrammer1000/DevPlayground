@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.wildsoft.projects.shop.project.shop.CartVO;
+import com.wildsoft.projects.shop.project.shop.ProductResponseVO;
 import com.wildsoft.projects.shop.project.shop.ProductVO;
 import com.wildsoft.projects.shop.project.shop.ShopService;
 import com.wildsoft.projects.shop.project.shop.UserInfoVO;
@@ -27,8 +28,10 @@ public class ShopController {
 
   // 상품
   @GetMapping("/getProductList")
-  public List<ProductVO> getProductList(ProductVO vo) {
-    return service.getProductList(vo);
+  public ProductResponseVO getProductList(ProductVO vo) {
+    List<ProductVO> product_list = service.getProductList(vo);
+    int total_count = service.getProductsCount();
+    return new ProductResponseVO(product_list, total_count);
   }
 
   @GetMapping("/getProduct")
