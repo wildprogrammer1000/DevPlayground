@@ -19,6 +19,11 @@ public class ShopServiceImpl implements ShopService {
   }
 
   @Override
+  public int getProductsCount() {
+    return dao.getProductsCount();
+  }
+
+  @Override
   public ProductVO getProduct(ProductVO vo) {
     return dao.getProduct(vo);
   }

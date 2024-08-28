@@ -39,6 +39,10 @@
     ]]>
   </select>
 
+  <select id="getProductsCount" resultType="int">
+    select count(*) as total_count from products
+  </select>
+
   <select id="getProduct"
     parameterType="com.wildsoft.projects.shop.project.shop.ProductVO"
     resultType="com.wildsoft.projects.shop.project.shop.ProductVO">
