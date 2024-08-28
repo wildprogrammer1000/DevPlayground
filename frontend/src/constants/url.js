@@ -58,7 +58,8 @@ const URL = {
 
   // API
   INSERT_PRODUCT: "/api/insertProduct",
-  
+  LIST_PRODUCT: "/api/getProductList",
+  GET_PRODUCT: "/api/getPRoduct",
 };
 
 export default URL;

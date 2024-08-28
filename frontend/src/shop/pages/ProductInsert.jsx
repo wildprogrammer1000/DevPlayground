@@ -1,8 +1,9 @@
-import { Button, MenuItem, Select, TextField } from "@mui/material";
-import { requestFetch } from "api/fetch";
-import CODE from "constants/code";
-import { SHOP_CATEGORY } from "constants/constants";
 import { useState } from "react";
+import { requestFetch } from "api/fetch";
+import { Button, MenuItem, Select, TextField } from "@mui/material";
+import { SHOP_CATEGORY } from "constants/constants";
+import CODE from "constants/code";
+import URL from "constants/url";
 
 const ProductInsert = ({ close }) => {
   const [inputs, setInputs] = useState({

@@ -1,8 +1,9 @@
-import { Button, Container } from "@mui/material";
-import URL from "constants/url";
 import { useContext } from "react";
 import { NavLink } from "react-router-dom";
+import { Button, Container } from "@mui/material";
 import { Context } from "utils/context";
+import ProductList from "./ProductList";
+import URL from "constants/url";
 
 const Shop = () => {
   const context = useContext(Context);
@@ -15,6 +16,7 @@ const Shop = () => {
           <Button variant="contained">관리자 콘솔</Button>
         </NavLink>
       )}
+      <ProductList />
     </Container>
   );
 };
