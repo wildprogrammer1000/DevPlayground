@@ -19,8 +19,8 @@ public class ShopServiceImpl implements ShopService {
   }
 
   @Override
-  public ProductVO getProductOne(ProductVO vo) {
-    return dao.getProductOne(vo);
+  public ProductVO getProduct(ProductVO vo) {
+    return dao.getProduct(vo);
   }
 
   @Override
@@ -44,8 +44,8 @@ public class ShopServiceImpl implements ShopService {
   }
 
   @Override
-  public CartVO getCartOne(CartVO vo) {
-    return dao.getCartOne(vo);
+  public CartVO getCart(CartVO vo) {
+    return dao.getCart(vo);
   }
 
   @Override

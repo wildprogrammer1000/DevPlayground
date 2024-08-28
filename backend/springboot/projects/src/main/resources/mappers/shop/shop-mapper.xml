@@ -39,7 +39,7 @@
     ]]>
   </select>
 
-  <select id="getProductOne"
+  <select id="getProduct"
     parameterType="com.wildsoft.projects.shop.project.shop.ProductVO"
     resultType="com.wildsoft.projects.shop.project.shop.ProductVO">
     select * from products where product_id=#{product_id}
@@ -72,7 +72,7 @@
     ]]>
   </select>
 
-  <select id="getCartOne"
+  <select id="getCart"
     parameterType="com.wildsoft.projects.shop.project.shop.CartVO"
     resultType="com.wildsoft.projects.shop.project.shop.CartVO">
     select * from carts where cart_id=#{cart_id}

@@ -26,14 +26,14 @@ public class ShopController {
   private ShopService service;
 
   // 상품
-  @GetMapping("/productList")
-  public List<ProductVO> productList(ProductVO vo) {
+  @GetMapping("/getProductList")
+  public List<ProductVO> getProductList(ProductVO vo) {
     return service.getProductList(vo);
   }
 
-  @GetMapping("/productOne")
-  public ProductVO productOne(ProductVO vo) {
-    return service.getProductOne(vo);
+  @GetMapping("/getProduct")
+  public ProductVO getProduct(ProductVO vo) {
+    return service.getProduct(vo);
   }
 
   @PostMapping("/insertProduct")
@@ -55,14 +55,14 @@ public class ShopController {
   }
 
   // 장바구니
-  @GetMapping("/cartList")
-  public List<CartVO> cartList(CartVO vo) {
+  @GetMapping("/getCartList")
+  public List<CartVO> getCartList(CartVO vo) {
     return service.getCartList(vo);
   }
 
-  @GetMapping("/cartOne")
-  public CartVO cartOne(CartVO vo) {
-    return service.getCartOne(vo);
+  @GetMapping("/getCart")
+  public CartVO getCart(CartVO vo) {
+    return service.getCart(vo);
   }
 
   @PostMapping("/insertCart")
